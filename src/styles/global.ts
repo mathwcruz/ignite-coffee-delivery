@@ -8,8 +8,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${props => props.theme["gray-100"]};
-    color: ${props => props.theme["gray-800"]};
+    background-color: ${(props) => props.theme["gray-100"]};
+    color: ${(props) => props.theme["gray-800"]};
     -webkit-font-smoothing: antialiased;
   }
 
@@ -17,5 +17,14 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-size: 0.875rem;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme["yellow-400"]};
+    border-radius: 4px;
   }
 `;
