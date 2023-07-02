@@ -38,7 +38,7 @@ export const coffeeList: CoffeeItem[] = [
   {
     id: uuid(),
     src: american,
-    type: 'American Expresso',
+    type: 'American Espresso',
     description: 'Diluted espresso, less intense than traditional',
     price: 1.50,
     tags: ["traditional"],

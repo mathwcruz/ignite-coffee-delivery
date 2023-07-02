@@ -6,13 +6,52 @@ export const CoffeeListContainer = styled.div`
   flex-direction: column;
   gap: 3.375rem;
 
-  h3 {
-    font-family: "Baloo 2", sans-serif;
-    line-height: 130%;
-    font-size: 2rem;
-    color: ${(props) => props.theme["gray-800"]};
-    font-weight: 800;
-    text-align: left;
+  section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h3 {
+      font-family: "Baloo 2", sans-serif;
+      line-height: 130%;
+      font-size: 2rem;
+      color: ${(props) => props.theme["gray-800"]};
+      font-weight: 800;
+      text-align: left;
+    }
+
+    div {
+      display: flex;
+      gap: 1rem;
+
+      select {
+        width: 10rem;
+        height: 2.125rem;
+        border-radius: 0.5rem;
+        padding: 0 0.5rem;
+        border: 0;
+        background-color: ${(props) => props.theme["gray-300"]};
+        color: ${(props) => props.theme["gray-700"]};
+        font-size: 0.875rem;
+        line-height: 130%;
+
+        &:focus {
+          outline: 0;
+          box-shadow: 0 0 0 1px ${(props) => props.theme["yellow-700"]};
+        }
+
+        option {
+          text-transform: capitalize;
+          padding: 0 0.5rem;
+          border: 0;
+          background-color: ${(props) => props.theme["gray-300"]};
+          color: ${(props) => props.theme["gray-700"]};
+          font-size: 0.875rem;
+          line-height: 130%;
+        }
+      }
+    }
   }
 
   ul {

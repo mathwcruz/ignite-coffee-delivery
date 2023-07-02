@@ -10,11 +10,52 @@ import {
   IncreaseDecreaseButtons,
   AddToCartButton,
 } from "./styles";
+import { simpleSort } from "../../../../utils/global";
 
 export function CoffeeList() {
+  let coffeeTags: string[] = [];
+
+  coffeeList.forEach((coffee) =>
+    coffee.tags.forEach(
+      (tag) => !coffeeTags?.includes(tag) && coffeeTags.push(tag)
+    )
+  );
+
+  coffeeTags = simpleSort(coffeeTags, "asc");
+
   return (
     <CoffeeListContainer>
-      <h3>Our coffees</h3>
+      <section>
+        <h3>Our coffees</h3>
+
+        <div>
+          <select
+            defaultValue="placeholder"
+            name="coffee-tag-filter"
+            id="coffee-tag-filter"
+          >
+            <option disabled value="placeholder">
+              Select coffee tag
+            </option>
+            <option value="all">all</option>
+            {coffeeTags?.map((tag) => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
+            ))}
+          </select>
+          <select
+            defaultValue="most-popular"
+            name="order-by-filter"
+            id="order-by-filter"
+          >
+            <option value="most-popular">Most popular</option>
+            <option value="alphabetical-order">Alphabetical order</option>
+            <option value="lowest-price">Lowest price</option>
+            <option value="highest-price">Highest price</option>
+          </select>
+        </div>
+      </section>
 
       <ul>
         {coffeeList?.map((coffee: CoffeeItemType) => (
@@ -38,7 +79,11 @@ export function CoffeeList() {
               </span>
               <section>
                 <IncreaseDecreaseButtons>
-                  <button type="button" title={coffee?.amount > 1 ? "Decrease 1" : ""} disabled={coffee?.amount === 1}>
+                  <button
+                    type="button"
+                    title={coffee?.amount > 1 ? "Decrease 1" : ""}
+                    disabled={coffee?.amount === 1}
+                  >
                     <Minus weight="bold" size={14} />
                   </button>
                   <span>{coffee?.amount}</span>
