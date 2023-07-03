@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { BENEFIT_ITEM_COLORS } from "../../utils/data/coffee-delivery-benefits";
 
 export const HomeContainer = styled.div`
-  margin-top: 3.375rem;
+  margin-top: 5.875rem;
 
   & div:first-child {
     display: flex;

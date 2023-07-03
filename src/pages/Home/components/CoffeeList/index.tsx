@@ -11,6 +11,7 @@ import {
   AddToCartButton,
 } from "./styles";
 import { simpleSort } from "../../../../utils/global";
+import { Select } from "../../../../components/Form/Select";
 
 export function CoffeeList() {
   let coffeeTags: string[] = [];
@@ -29,10 +30,10 @@ export function CoffeeList() {
         <h3>Our coffees</h3>
 
         <div>
-          <select
-            defaultValue="placeholder"
-            name="coffee-tag-filter"
+          <Select
             id="coffee-tag-filter"
+            name="coffee-tag-filter"
+            defaultValue="placeholder"
           >
             <option disabled value="placeholder">
               Select coffee tag
@@ -43,17 +44,17 @@ export function CoffeeList() {
                 {tag}
               </option>
             ))}
-          </select>
-          <select
-            defaultValue="most-popular"
-            name="order-by-filter"
+          </Select>
+          <Select
             id="order-by-filter"
+            name="order-by-filter"
+            defaultValue="most-popular"
           >
             <option value="most-popular">Most popular</option>
             <option value="alphabetical-order">Alphabetical order</option>
             <option value="lowest-price">Lowest price</option>
             <option value="highest-price">Highest price</option>
-          </select>
+          </Select>
         </div>
       </section>
 
