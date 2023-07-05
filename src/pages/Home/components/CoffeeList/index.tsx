@@ -1,17 +1,18 @@
-import { Minus, Plus, ShoppingCart } from "phosphor-react";
+import { ShoppingCart } from "phosphor-react";
+
+import { Select } from "../../../../components/Form/Select";
+import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
 import {
   coffeeList,
   CoffeeItem as CoffeeItemType,
 } from "../../../../utils/data/coffee-list";
+import { simpleSort } from "../../../../utils/global";
 
 import {
   CoffeeListContainer,
   CoffeeItem,
-  IncreaseDecreaseButtons,
   AddToCartButton,
 } from "./styles";
-import { simpleSort } from "../../../../utils/global";
-import { Select } from "../../../../components/Form/Select";
 
 export function CoffeeList() {
   let coffeeTags: string[] = [];
@@ -79,19 +80,7 @@ export function CoffeeList() {
                 $<strong>{String(coffee?.price)}</strong>
               </span>
               <section>
-                <IncreaseDecreaseButtons>
-                  <button
-                    type="button"
-                    title={coffee?.amount > 1 ? "Decrease 1" : ""}
-                    disabled={coffee?.amount === 1}
-                  >
-                    <Minus weight="bold" size={14} />
-                  </button>
-                  <span>{coffee?.amount}</span>
-                  <button type="button" title="Increase 1">
-                    <Plus weight="bold" size={14} />
-                  </button>
-                </IncreaseDecreaseButtons>
+                <IncreaseDecreaseAmountButtons coffee={coffee} />
                 <AddToCartButton type="button" title="Add to cart">
                   <ShoppingCart weight="fill" size={18} />
                 </AddToCartButton>
