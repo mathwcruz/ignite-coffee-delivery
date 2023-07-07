@@ -42,12 +42,16 @@ export const HeaderContainer = styled.header`
       border: 0;
       transition: all 0.2s ease-in-out;
 
-      &:focus {
-        outline: 0;
-        box-shadow: 0 0 0 2px ${props => props.theme["yellow-400"]};
+      &.empty-cart {
+        pointer-events: none;
       }
 
-      &:hover {
+      &:focus {
+        outline: 0;
+        box-shadow: 0 0 0 2px ${(props) => props.theme["yellow-400"]};
+      }
+
+      &:hover:not(.empty-cart) {
         opacity: 0.9;
       }
     }
