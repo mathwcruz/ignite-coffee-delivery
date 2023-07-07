@@ -1,11 +1,10 @@
 Features
 
 [x] Listagem de cafés disponíveis para compra
-[] Formulário para o usuário preencher o seu endereço
-[] Dark mode
+[x] Formulário para o usuário preencher o seu endereço
+[] Trabalhar no modo responsivo do app
 [] Filtro de busca na listagem de cafés
 [] Filtro de ordenação na listagem de cafés
-[] Trabalhar no modo responsivo do app
 [] Adicionar uma quantidades específicas de cafés no carrinho
 [] Aumentar ou diminuir a quantidade de cafés no carrinho
 [] Exibir o total de itens no carrinho no Header

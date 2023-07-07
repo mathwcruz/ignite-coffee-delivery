@@ -11,6 +11,16 @@ export const FinishOrderContainer = styled.div`
   gap: 1.5rem;
 `;
 
+export const NoCoffeesAddedMessage = styled.p`
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 17.5rem;
+  font-size: 1rem;
+  line-height: 130%;
+  color: ${(props) => props.theme["gray-700"]};
+`;
+
 export const CoffeesListContainer = styled.ul`
   list-style: none;
   max-width: 23rem;
