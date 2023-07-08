@@ -16,7 +16,7 @@ import {
 export function FinishOrder() {
   return (
     <FinishOrderContainer>
-      {1 > 0 ? (
+      {0 > 1 ? (
         <NoCoffeesAddedMessage>
           You need to add at least one coffee to be able to make a order
         </NoCoffeesAddedMessage>

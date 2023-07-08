@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const CheckoutContainer = styled.div`
   width: 100%;
   margin-top: 2.5rem;
+  margin-bottom: 2rem;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

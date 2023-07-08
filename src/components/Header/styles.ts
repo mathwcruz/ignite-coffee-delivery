@@ -24,8 +24,9 @@ export const HeaderContainer = styled.header`
       border-radius: 6px;
 
       span {
-        color: ${(props) => props.theme["purple-700"]};
+        font-size: 0.875rem;
         line-height: 130%;
+        color: ${(props) => props.theme["purple-700"]};
       }
     }
 
@@ -42,17 +43,37 @@ export const HeaderContainer = styled.header`
       border: 0;
       transition: all 0.2s ease-in-out;
 
-      &.empty-cart {
-        pointer-events: none;
-      }
-
       &:focus {
         outline: 0;
         box-shadow: 0 0 0 2px ${(props) => props.theme["yellow-400"]};
       }
 
-      &:hover:not(.empty-cart) {
+      &:hover {
         opacity: 0.9;
+      }
+    }
+  }
+
+  @media screen and (max-width: ${props => props.theme.small}) {
+    & > a {
+      img {
+        width: 4rem;
+      }
+    }
+
+    div {
+      div {
+        padding: 0.3rem;
+        gap: 0.5rem;
+
+        span {
+          font-size: 0.75rem;
+          line-height: 100%;
+        }
+      }
+
+      a {
+        padding: 0.375rem;
       }
     }
   }

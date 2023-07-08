@@ -19,7 +19,7 @@ export function Header() {
           <MapPin weight="fill" size={22} />
           <span>Venâncio Aires, RS</span>
         </div>
-        <NavLink to="/checkout" title="See cart" /*className="empty-cart"*/>
+        <NavLink to="/checkout" title="See cart">
           <ShoppingCart weight="fill" size={22} />
         </NavLink>
       </div>

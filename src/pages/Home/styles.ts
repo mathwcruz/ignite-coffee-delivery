@@ -4,8 +4,9 @@ import { BENEFIT_ITEM_COLORS } from "../../utils/data/coffee-delivery-benefits";
 
 export const HomeContainer = styled.div`
   margin-top: 5.875rem;
+  margin-bottom: 2rem;
 
-  & div:first-child {
+  & > div {
     display: flex;
     gap: 3.5rem;
 
@@ -35,6 +36,45 @@ export const HomeContainer = styled.div`
       }
     }
   }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    margin-top: 0;
+
+    & > div {
+      gap: 1.75rem;
+
+      section {
+        div {
+          h1 {
+            font-size: 1.375rem;
+          }
+
+          p {
+            font-size: 0.875rem;
+          }
+        }
+      }
+
+      img {
+        max-width: 15rem;
+        align-self: center;
+      }
+    }
+  }
+
+  @media screen and (min-width: ${props => props.theme.small}) and (max-width: ${props => props.theme.large}) {
+    & > div {
+      img {
+        max-width: 25rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: ${props => props.theme.large}) {
+    & > div {
+      flex-direction: column;
+    }
+  }
 `;
 
 export const Benefits = styled.ul`
@@ -44,6 +84,12 @@ export const Benefits = styled.ul`
   align-self: flex-start;
   grid-template-columns: repeat(2, 1fr);
   row-gap: 1.25rem;
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    margin-top: 1.75rem;
+    row-gap: 1rem;
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 interface BenefitItemProps {
@@ -69,5 +115,19 @@ export const BenefitItem = styled.li<BenefitItemProps>`
       props.theme[BENEFIT_ITEM_COLORS[props.color]]};
     padding: 0.5rem;
     border-radius: 50%;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    gap: 0.5rem;
+    font-size: 0.75rem;
+
+    span {
+      padding: 0.375rem;
+
+      svg {
+        width: 0.875rem;
+        height: 0.875rem;
+      }
+    }
   }
 `;

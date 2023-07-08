@@ -7,6 +7,8 @@ export const CoffeeListContainer = styled.div`
   gap: 3.375rem;
 
   section {
+    max-width: initial !important;
+    flex-direction: row !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -23,14 +25,14 @@ export const CoffeeListContainer = styled.div`
 
     div {
       display: flex;
-      gap: 1rem;
+      flex-direction: row !important;
+      gap: 1rem !important;
 
       select {
         width: 10rem;
         height: 2.125rem;
 
         option {
-          text-transform: capitalize;
           padding: 0 0.5rem;
           border: 0;
           background-color: ${(props) => props.theme["gray-300"]};
@@ -49,6 +51,31 @@ export const CoffeeListContainer = styled.div`
     flex-wrap: wrap;
     row-gap: 2.5rem;
     column-gap: 2rem;
+  }
+
+  @media screen and (max-width: ${props => props.theme.small}) {
+    margin-top: 1.75rem;
+    gap: 3.5rem !important;
+    align-items: center;
+
+    & > section {
+      flex-direction: column !important;
+
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      & > div {
+        flex-direction: column !important;
+        gap: 1rem !important;
+      }
+    }
+
+    & > ul {
+      row-gap: 3.5rem;
+      align-items: center;
+      justify-content: center;
+    }
   }
 `;
 
@@ -89,9 +116,9 @@ export const CoffeeItem = styled.li`
     }
   }
 
-  section {
+  & > section {
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     gap: 0.375rem;
     align-items: center;
     justify-content: center;
@@ -144,6 +171,35 @@ export const CoffeeItem = styled.li`
       flex-direction: row;
       gap: 0.5rem;
       margin-bottom: 0;
+    }
+  }
+
+  @media screen and (max-width: ${props => props.theme.small}) {
+    height: 16.5rem;
+    padding: 0rem 1.25rem 1rem 1.25rem;
+
+    & > section {
+      strong {
+        font-size: 1rem;
+      }
+
+      span {
+        font-size: 0.75rem;
+      }
+    }
+
+    footer {
+      & > span {
+        font-size: 0.75rem;
+
+        strong {
+          font-size: 1.25rem;
+        }
+      }
+
+      section {
+        flex-direction: row !important;
+      }
     }
   }
 `;

@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 export const FinishOrderContainer = styled.div`
   background-color: ${(props) => props.theme["gray-200"]};
   border-radius: 0.375rem 2.75rem 0.375rem 2.75rem;
-  padding: 2.5rem;
+  padding: 2.5rem 3.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,6 +24,9 @@ export const NoCoffeesAddedMessage = styled.p`
 export const CoffeesListContainer = styled.ul`
   list-style: none;
   max-width: 23rem;
+  max-height: 21.25rem;
+  padding-right: 0.5rem;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

@@ -40,4 +40,9 @@ export const IncreaseDecreaseButtonsContainer = styled.div`
     line-height: 130%;
     color: ${(props) => props.theme["gray-900"]} !important;
   }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+  }
 `;
