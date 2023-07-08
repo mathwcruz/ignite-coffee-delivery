@@ -75,4 +75,24 @@ export const ShippingAddressFormContainer = styled.form`
       }
     }
   }
+
+  @media screen and (max-width: ${(props) => props.theme.large}) {
+    padding: 1rem;
+
+    #shipping-address-inputs-container {
+      grid-template-columns: repeat(2, 1fr);
+
+      input:nth-child(1),
+      input:nth-child(3),
+      input:nth-child(5) {
+        width: initial;
+      }
+
+      input:nth-child(3),
+      input:nth-child(4),
+      input:nth-child(5) {
+        grid-column: span 3 / span 3;
+      }
+    }
+  }
 `;

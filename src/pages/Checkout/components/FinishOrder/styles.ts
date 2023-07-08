@@ -9,6 +9,10 @@ export const FinishOrderContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    padding: 1rem;
+  }
 `;
 
 export const NoCoffeesAddedMessage = styled.p`
@@ -30,6 +34,11 @@ export const CoffeesListContainer = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  @media screen and (max-width: ${(props) => props.theme.large}) {
+    overflow-y: hidden;
+    max-height: initial;
+  }
 `;
 
 export const CoffeeItem = styled.li`
@@ -83,6 +92,29 @@ export const CoffeeItem = styled.li`
     font-weight: 700;
     color: ${(props) => props.theme["gray-700"]};
   }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    padding: 0.25rem 0.125rem 0.75rem 0.125rem;
+    gap: 1rem;
+
+    & > div {
+      & > div {
+        span {
+          font-size: 0.875rem;
+        }
+
+        section {
+          & > div {
+            height: 1.75rem;
+          }
+        }
+      }
+    }
+
+    strong {
+      font-size: 0.875rem;
+    }
+  }
 `;
 
 export const RemoveCoffeeFromOrderButton = styled.button`
@@ -115,6 +147,11 @@ export const RemoveCoffeeFromOrderButton = styled.button`
   svg {
     color: ${(props) => props.theme["purple-400"]};
   }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    height: 1.75rem;
+    font-size: 0.625rem;
+  }
 `;
 
 export const TotalOrderAmountContainer = styled.div`
@@ -123,7 +160,7 @@ export const TotalOrderAmountContainer = styled.div`
   flex-direction: column;
   gap: 0.75rem;
 
-  section {
+  & > section {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -143,6 +180,22 @@ export const TotalOrderAmountContainer = styled.div`
       font-size: 1.25rem;
       font-weight: 700;
       color: ${(props) => props.theme["gray-800"]};
+    }
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    & > section {
+      span:nth-child(1) {
+        font-size: 0.75rem;
+      }
+
+      span:nth-child(2) {
+        font-size: 0.875rem;
+      }
+
+      strong {
+        font-size: 1rem;
+      }
     }
   }
 `;
@@ -172,5 +225,10 @@ export const FinishOrderButton = styled.button`
 
   &:hover {
     opacity: 0.9;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    max-width: 19rem;
+    font-size: 0.75rem;
   }
 `;

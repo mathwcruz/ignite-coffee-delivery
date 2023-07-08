@@ -2,7 +2,7 @@ Features
 
 [x] Listagem de cafés disponíveis para compra
 [x] Formulário para o usuário preencher o seu endereço
-[] Trabalhar no modo responsivo do app
+[x] Trabalhar no modo responsivo do app
 [] Filtro de busca na listagem de cafés
 [] Filtro de ordenação na listagem de cafés
 [] Adicionar uma quantidades específicas de cafés no carrinho

@@ -16,6 +16,12 @@ export const CheckoutContainer = styled.div`
     font-weight: bold;
     color: ${(props) => props.theme["gray-800"]};
   }
+
+  @media screen and (max-width: ${(props) => props.theme.large}) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const DeliveryDetailsContainer = styled.div`
@@ -23,6 +29,16 @@ export const DeliveryDetailsContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   max-width: 40rem;
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    max-width: 21.375rem;
+    align-self: center;
+  }
+
+  @media screen and (min-width: ${(props) => props.theme.small}) and (max-width: ${(props) => props.theme.large}) {
+    max-width: 28rem;
+    align-self: center;
+  }
 `;
 
 export const SelectedCoffeesContainer = styled.div`

@@ -40,6 +40,14 @@ export const PaymentMethodContainer = styled.section`
     display: flex;
     gap: 0.75rem;
   }
+
+  @media screen and (max-width: ${(props) => props.theme.large}) {
+    padding: 1rem;
+
+    ul {
+      gap: 0.25rem;
+    }
+  }
 `;
 
 export const PaymentMethodItem = styled.li`
@@ -73,5 +81,17 @@ export const PaymentMethodItem = styled.li`
     font-size: 0.75rem;
     line-height: 160%;
     color: ${(props) => props.theme["gray-700"]};
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    width: 8rem;
+    height: 2.75rem;
+    padding: 0.5rem;
+    gap: 0.375rem;
+    justify-content: center;
+
+    span {
+      font-size: 0.563rem;
+    }
   }
 `;

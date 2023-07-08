@@ -28,7 +28,7 @@ export function ShippingAddressForm() {
         <div>
           <Input id="city" type="text" placeholder="City" />
           <Select id="state" name="state" defaultValue="placeholder">
-            <option value="placeholder">UF</option>
+            <option disabled value="placeholder">UF</option>
             <option value="rs">RS</option>
           </Select>
         </div>
