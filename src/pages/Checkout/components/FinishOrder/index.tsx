@@ -1,7 +1,8 @@
 /* eslint-disable no-constant-condition */
 import { Trash } from "phosphor-react";
+
+import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder"
 import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
-import { coffeeList } from "../../../../utils/data/coffee-list";
 
 import {
   FinishOrderContainer,
@@ -14,6 +15,8 @@ import {
 } from "./styles";
 
 export function FinishOrder() {
+  const { coffeeList } = useCoffeeOrder();
+
   return (
     <FinishOrderContainer>
       {0 > 1 ? (
@@ -58,7 +61,12 @@ export function FinishOrder() {
             </section>
           </TotalOrderAmountContainer>
 
-          <FinishOrderButton>Finish order</FinishOrderButton>
+          <FinishOrderButton
+            type="button"
+            // onClick={finishOrder}
+          >
+            Finish order
+          </FinishOrderButton>
         </>
       )}
     </FinishOrderContainer>

@@ -1,29 +1,29 @@
+import { useEffect, useState } from "react";
 import { ShoppingCart } from "phosphor-react";
 
+import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
+import { CoffeeItem as CoffeeItemType } from "../../../../contexts/CoffeeOrderContext";
 import { Select } from "../../../../components/Form/Select";
 import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
-import {
-  coffeeList,
-  CoffeeItem as CoffeeItemType,
-} from "../../../../utils/data/coffee-list";
 import { simpleSort } from "../../../../utils/global";
 
-import {
-  CoffeeListContainer,
-  CoffeeItem,
-  AddToCartButton,
-} from "./styles";
+import { CoffeeListContainer, CoffeeItem, AddToCartButton } from "./styles";
 
 export function CoffeeList() {
-  let coffeeTags: string[] = [];
+  const { allCoffees, coffeeList } = useCoffeeOrder();
 
-  coffeeList.forEach((coffee) =>
-    coffee.tags.forEach(
-      (tag) => !coffeeTags?.includes(tag) && coffeeTags.push(tag)
-    )
-  );
+  const [coffeeTags, setCoffeeTags] = useState<string[]>([]);
 
-  coffeeTags = simpleSort(coffeeTags, "asc");
+  useEffect(() => {
+    allCoffees.forEach((coffee) =>
+      coffee.tags.forEach(
+        (tag) =>
+        setCoffeeTags((old) => !old?.includes(tag) ? [...old, tag] : old)
+      )
+    );
+
+    setCoffeeTags((old) => simpleSort(old, "asc"));
+  }, [allCoffees]);
 
   return (
     <CoffeeListContainer>

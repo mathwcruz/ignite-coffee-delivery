@@ -15,24 +15,49 @@ export function ShippingAddressForm() {
           <span>Tell us where do you want to receive your order</span>
         </div>
       </header>
-      <div id="shipping-address-inputs-container">
-        <Input id="zip-code" type="text" placeholder="ZIP Code" />
-        <Input id="street" type="text" placeholder="Street" />
-        <Input id="number" type="number" placeholder="Number" />
-        <Input
-          id="additional-info"
-          type="text"
-          placeholder="Additional info (optional)"
-        />
-        <Input id="neighborhood" type="text" placeholder="Neighborhood" />
-        <div>
-          <Input id="city" type="text" placeholder="City" />
-          <Select id="state" name="state" defaultValue="placeholder">
-            <option disabled value="placeholder">UF</option>
-            <option value="rs">RS</option>
-          </Select>
-        </div>
-      </div>
+        <form id="shipping-address-inputs-container">
+          <Input
+            id="zipCode"
+            type="text"
+            placeholder="ZIP Code"
+          />
+          <Input
+            id="street"
+            type="text"
+            placeholder="Street"
+          />
+          <Input
+            id="number"
+            type="number"
+            placeholder="Number"
+          />
+          <Input
+            id="additionalInfo"
+            type="text"
+            placeholder="Additional info (optional)"
+          />
+          <Input
+            id="district"
+            type="text"
+            placeholder="District"
+          />
+          <div>
+            <Input
+              id="city"
+              type="text"
+              placeholder="City"
+            />
+            <Select
+              id="state"
+              defaultValue="placeholder"
+            >
+              <option disabled value="placeholder">
+                UF
+              </option>
+              <option value="rs">RS</option>
+            </Select>
+          </div>
+        </form>
     </ShippingAddressFormContainer>
   );
 }

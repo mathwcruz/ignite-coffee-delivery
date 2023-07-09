@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid"
 
+import { CoffeeItem } from "../../contexts/CoffeeOrderContext";
+
 import espresso from "../../assets/images/coffees/espresso.svg";
 import american from "../../assets/images/coffees/american.svg";
 import expressCreamCoffee from "../../assets/images/coffees/express-cream-coffee.svg";
@@ -15,17 +17,7 @@ import hawaiian from "../../assets/images/coffees/hawaiian.svg";
 import arabic from "../../assets/images/coffees/arabic.svg";
 import irish from "../../assets/images/coffees/irish.svg";
 
-export interface CoffeeItem {
-  id: string;
-  src: string;
-  type: string;
-  description: string;
-  price: number;
-  tags: string[];
-  amount: number;
-}
-
-export const coffeeList: CoffeeItem[] = [
+export const coffees: CoffeeItem[] = [
   {
     id: uuid(),
     src: espresso,
