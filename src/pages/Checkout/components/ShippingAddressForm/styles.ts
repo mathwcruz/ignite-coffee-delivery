@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ShippingAddressFormContainer = styled.form`
+export const ShippingAddressFormContainer = styled.div`
   background-color: ${(props) => props.theme["gray-200"]};
   padding: 2.5rem;
   border-radius: 0.375rem;

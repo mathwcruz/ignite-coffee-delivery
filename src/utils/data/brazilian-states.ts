@@ -9,7 +9,7 @@ export const brazilianStates: BrazilianState[] = [
   { value: "AP", initials: "AP" },
   { value: "AM", initials: "AM" },
   { value: "BA", initials: "BA" },
-  { value: "BA", initials: "BA" },
+  { value: "CE", initials: "CE" },
   { value: "DF", initials: "DF" },
   { value: "ES", initials: "ES" },
   { value: "GO", initials: "GO" },

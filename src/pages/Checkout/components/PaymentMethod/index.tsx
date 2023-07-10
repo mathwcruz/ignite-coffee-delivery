@@ -1,10 +1,13 @@
 import { CurrencyDollar } from "phosphor-react";
 
+import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
 import { paymentMethods } from "../../../../utils/data/payment-methods";
 
 import { PaymentMethodContainer, PaymentMethodItem } from "./styles";
 
 export function PaymentMethod() {
+  const { order, updateOrder } = useCoffeeOrder();
+
   return (
     <PaymentMethodContainer>
       <header>
@@ -16,7 +19,15 @@ export function PaymentMethod() {
       </header>
       <ul>
         {paymentMethods?.map((paymentMethod) => (
-          <PaymentMethodItem key={paymentMethod?.id}>
+          <PaymentMethodItem
+            key={paymentMethod?.id}
+            className={
+              order?.paymentMethod === paymentMethod?.id ? "selected" : ""
+            }
+            onClick={() =>
+              updateOrder({ ...order, paymentMethod: paymentMethod?.id })
+            }
+          >
             {paymentMethod?.icon}
             <span>{paymentMethod?.text}</span>
           </PaymentMethodItem>

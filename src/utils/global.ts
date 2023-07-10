@@ -41,3 +41,14 @@ export function sortBy<T extends Object>(
 
   return compareFn;
 }
+
+export function zipCodeMask(str: string) {
+  if (!str) return "";
+
+  let zipCodeFormatted: string;
+
+  zipCodeFormatted = str.replace(/\D/g, "");
+  zipCodeFormatted = zipCodeFormatted.replace(/(\d{5})(\d)/, "$1-$2");
+
+  return zipCodeFormatted;
+}

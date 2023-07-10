@@ -15,7 +15,7 @@ import {
 } from "./styles";
 
 export function FinishOrder() {
-  const { coffeeList } = useCoffeeOrder();
+  const { coffeeList, canSubmitAnOrder } = useCoffeeOrder();
 
   return (
     <FinishOrderContainer>
@@ -63,6 +63,7 @@ export function FinishOrder() {
 
           <FinishOrderButton
             type="button"
+            disabled={!canSubmitAnOrder}
             // onClick={finishOrder}
           >
             Finish order

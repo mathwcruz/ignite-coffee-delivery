@@ -218,13 +218,18 @@ export const FinishOrderButton = styled.button`
   line-height: 160%;
   font-weight: 700;
 
-  &:focus {
+  &:focus:not(:disabled) {
     outline: 0;
     box-shadow: 0 0 0 2px ${(props) => props.theme["gray-200"]};
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     opacity: 0.9;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   @media screen and (max-width: ${(props) => props.theme.small}) {
