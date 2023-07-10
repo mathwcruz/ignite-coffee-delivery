@@ -21,11 +21,11 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-thumb {
     background: ${(props) => props.theme["yellow-400"]};
-    border-radius: 4px;
+    border-radius: 3px;
   }
 `;
