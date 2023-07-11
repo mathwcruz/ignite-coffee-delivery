@@ -3,8 +3,8 @@ Features
 [x] Listagem de cafés disponíveis para compra
 [x] Formulário para o usuário preencher o seu endereço
 [x] Modo responsivo
-[] Filtro de busca na listagem de cafés
-[] Filtro de ordenação na listagem de cafés
+[x] Filtro de busca na listagem de cafés
+[x] Filtro de ordenação na listagem de cafés
 [] Adicionar uma quantidades específicas de cafés no carrinho
 [] Aumentar ou diminuir a quantidade de cafés no carrinho
 [] Exibir o total de itens no carrinho no Header
