@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { ShoppingCart } from "phosphor-react";
 
 import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
-import { CoffeeItem as CoffeeItemType } from "../../../../contexts/CoffeeOrderContext";
+import {
+  CoffeeItem as CoffeeItemType,
+  CoffeeListOrderByValues,
+} from "../../../../contexts/CoffeeOrderContext";
 import { Select } from "../../../../components/Form/Select";
 import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
 import { simpleSort } from "../../../../utils/global";
@@ -10,15 +13,21 @@ import { simpleSort } from "../../../../utils/global";
 import { CoffeeListContainer, CoffeeItem, AddToCartButton } from "./styles";
 
 export function CoffeeList() {
-  const { allCoffees, coffeeList } = useCoffeeOrder();
+  const {
+    allCoffees,
+    coffeeList,
+    currentCoffeeTagFilter,
+    currentOrderByFilter,
+    filterCoffeeList,
+    sortCoffeeList,
+  } = useCoffeeOrder();
 
   const [coffeeTags, setCoffeeTags] = useState<string[]>([]);
 
   useEffect(() => {
     allCoffees.forEach((coffee) =>
-      coffee.tags.forEach(
-        (tag) =>
-        setCoffeeTags((old) => !old?.includes(tag) ? [...old, tag] : old)
+      coffee.tags.forEach((tag) =>
+        setCoffeeTags((old) => (!old?.includes(tag) ? [...old, tag] : old))
       )
     );
 
@@ -34,27 +43,39 @@ export function CoffeeList() {
           <Select
             id="coffee-tag-filter"
             name="coffee-tag-filter"
-            defaultValue="placeholder"
+            value={currentCoffeeTagFilter}
+            onChange={(e) => filterCoffeeList(e.target.value)}
           >
             <option disabled value="placeholder">
               Select coffee tag
             </option>
-            <option value="all">all</option>
+            <option value="all">All</option>
             {coffeeTags?.map((tag) => (
               <option key={tag} value={tag}>
-                {tag}
+                {`${tag.charAt(0).toUpperCase()}${tag.slice(1)}`}
               </option>
             ))}
           </Select>
           <Select
             id="order-by-filter"
             name="order-by-filter"
-            defaultValue="most-popular"
+            value={currentOrderByFilter}
+            onChange={(e) =>
+              sortCoffeeList(e.target.value as CoffeeListOrderByValues, currentCoffeeTagFilter, coffeeList)
+            }
           >
-            <option value="most-popular">Most popular</option>
-            <option value="alphabetical-order">Alphabetical order</option>
-            <option value="lowest-price">Lowest price</option>
-            <option value="highest-price">Highest price</option>
+            <option value={CoffeeListOrderByValues.MOST_POPULAR}>
+              Most popular
+            </option>
+            <option value={CoffeeListOrderByValues.ALPHABETICAL_ORDER}>
+              Alphabetical order
+            </option>
+            <option value={CoffeeListOrderByValues.LOWEST_PRICE}>
+              Lowest price
+            </option>
+            <option value={CoffeeListOrderByValues.HIGHEST_PRICE}>
+              Highest price
+            </option>
           </Select>
         </div>
       </section>

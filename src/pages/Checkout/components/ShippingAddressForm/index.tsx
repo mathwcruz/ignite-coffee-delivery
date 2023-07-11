@@ -67,7 +67,7 @@ export function ShippingAddressForm() {
               shippingAddress: {
                 ...order?.shippingAddress,
                 number:
-                  e.target.value.length === 4
+                  e.target.value.length === 5
                     ? order?.shippingAddress?.number
                     : Number(e.target.value),
               },
