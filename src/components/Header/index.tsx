@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { MapPin, ShoppingCart } from "phosphor-react";
 
+import { useCoffeeOrder } from "../../hooks/useCoffeeOrder";
+
 import logo from "../../assets/images/logo.svg";
-import { HeaderContainer } from "./styles";
+import { HeaderContainer, TotalCoffeesInTheCartBadge } from "./styles";
 
 export function Header() {
+  const { order } = useCoffeeOrder();
+
   return (
     <HeaderContainer>
       <NavLink to="/" title="Home">
@@ -21,6 +25,11 @@ export function Header() {
         </div>
         <NavLink to="/checkout" title="See cart">
           <ShoppingCart weight="fill" size={22} />
+          {order?.selectedCoffees?.length > 0 && (
+            <TotalCoffeesInTheCartBadge title={`${order?.totalCoffeeAmount || 3} coffees added`}>
+              <strong>{order?.totalCoffeeAmount || 3}</strong>
+            </TotalCoffeesInTheCartBadge>
+          )}
         </NavLink>
       </div>
     </HeaderContainer>

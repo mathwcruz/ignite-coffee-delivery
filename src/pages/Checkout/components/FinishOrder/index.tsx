@@ -1,7 +1,6 @@
-/* eslint-disable no-constant-condition */
 import { Trash } from "phosphor-react";
 
-import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder"
+import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
 import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
 
 import {
@@ -15,18 +14,18 @@ import {
 } from "./styles";
 
 export function FinishOrder() {
-  const { coffeeList, canSubmitAnOrder } = useCoffeeOrder();
+  const { order, canSubmitAnOrder } = useCoffeeOrder();
 
   return (
     <FinishOrderContainer>
-      {0 > 1 ? (
+      {!order?.selectedCoffees || order?.selectedCoffees?.length === 0 ? (
         <NoCoffeesAddedMessage>
-          You need to add at least one coffee to be able to make a order
+          You need to add at least one coffee to be able to make an order
         </NoCoffeesAddedMessage>
       ) : (
         <>
           <CoffeesListContainer>
-            {coffeeList?.slice(0, 2)?.map((coffee) => (
+            {order.selectedCoffees?.map((coffee) => (
               <CoffeeItem key={coffee?.id}>
                 <div>
                   <img src={coffee?.src} alt={coffee?.type} />
@@ -49,7 +48,7 @@ export function FinishOrder() {
           <TotalOrderAmountContainer>
             <section>
               <span>Total items</span>
-              <span>$3.3</span>
+              <span>${order?.amount?.totalCoffeesAmount}</span>
             </section>
             <section>
               <span>Delivery</span>
@@ -57,7 +56,7 @@ export function FinishOrder() {
             </section>
             <section>
               <strong>Total</strong>
-              <strong>$7.3</strong>
+              <strong>${order?.amount?.totalAmount}</strong>
             </section>
           </TotalOrderAmountContainer>
 

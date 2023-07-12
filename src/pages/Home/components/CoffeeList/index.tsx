@@ -20,6 +20,8 @@ export function CoffeeList() {
     currentOrderByFilter,
     filterCoffeeList,
     sortCoffeeList,
+    updateCoffeeAmount,
+    addCoffeeAmountToCart,
   } = useCoffeeOrder();
 
   const [coffeeTags, setCoffeeTags] = useState<string[]>([]);
@@ -61,7 +63,11 @@ export function CoffeeList() {
             name="order-by-filter"
             value={currentOrderByFilter}
             onChange={(e) =>
-              sortCoffeeList(e.target.value as CoffeeListOrderByValues, currentCoffeeTagFilter, coffeeList)
+              sortCoffeeList(
+                e.target.value as CoffeeListOrderByValues,
+                currentCoffeeTagFilter,
+                coffeeList
+              )
             }
           >
             <option value={CoffeeListOrderByValues.MOST_POPULAR}>
@@ -101,8 +107,15 @@ export function CoffeeList() {
                 $<strong>{String(coffee?.price)}</strong>
               </span>
               <section>
-                <IncreaseDecreaseAmountButtons coffee={coffee} />
-                <AddToCartButton type="button" title="Add to cart">
+                <IncreaseDecreaseAmountButtons
+                  onCoffeeAmountChange={updateCoffeeAmount}
+                  coffee={coffee}
+                />
+                <AddToCartButton
+                  type="button"
+                  title="Add to cart"
+                  onClick={() => addCoffeeAmountToCart(coffee?.id)}
+                >
                   <ShoppingCart weight="fill" size={18} />
                 </AddToCartButton>
               </section>

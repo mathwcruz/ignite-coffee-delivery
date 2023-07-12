@@ -30,7 +30,7 @@ interface ShippingAddress {
   state: string;
 }
 
-interface SelectedCoffee {
+export interface SelectedCoffee {
   id: string;
   src: string;
   type: string;
@@ -40,7 +40,6 @@ interface SelectedCoffee {
 
 interface OrderAmount {
   totalCoffeesAmount: number;
-  deliveryAmount: number;
   totalAmount: number;
 }
 
@@ -48,6 +47,7 @@ interface Order {
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   selectedCoffees: SelectedCoffee[];
+  totalCoffeeAmount: number;
   amount: OrderAmount;
 }
 
@@ -62,9 +62,11 @@ interface CoffeeOrderData {
   filterCoffeeList: (coffeeTag: string) => void;
   sortCoffeeList: (
     orderBy: CoffeeListOrderByValues,
-    coffeeTag: string,
+    coffeeTag: string | null,
     currentCoffeeList: CoffeeItem[]
   ) => void;
+  updateCoffeeAmount: (coffeeId: string, coffeeAmount: number) => void;
+  addCoffeeAmountToCart: (coffeeId: string) => void;
 }
 
 export const CoffeeOrderContext = createContext({} as CoffeeOrderData);
@@ -91,14 +93,16 @@ export function CoffeeOrderContextProvider({
 
   function sortCoffeeList(
     orderBy: CoffeeListOrderByValues,
-    coffeeTagFilter: string,
+    coffeeTagFilter: string | null,
     currentCoffeeList: CoffeeItem[]
   ) {
     switch (orderBy) {
       case CoffeeListOrderByValues.MOST_POPULAR: {
-        const coffeeListOrderedByMostPopular: CoffeeItem[] = allCoffees?.filter(
-          (coffee) => coffee?.tags?.includes(coffeeTagFilter)
-        );
+        const coffeeListOrderedByMostPopular: CoffeeItem[] = coffeeTagFilter
+          ? allCoffees?.filter((coffee) =>
+              coffee?.tags?.includes(coffeeTagFilter)
+            )
+          : allCoffees;
 
         setCoffeeList(coffeeListOrderedByMostPopular);
 
@@ -144,7 +148,7 @@ export function CoffeeOrderContextProvider({
     setCurrentCoffeeTagFilter(coffeeTag);
 
     if (coffeeTag === "all") {
-      sortCoffeeList(currentOrderByFilter, coffeeTag, allCoffees);
+      sortCoffeeList(currentOrderByFilter, null, allCoffees);
 
       return;
     } else {
@@ -153,6 +157,64 @@ export function CoffeeOrderContextProvider({
       );
 
       sortCoffeeList(currentOrderByFilter, coffeeTag, coffeeListFiltered);
+    }
+  }
+
+  function updateCoffeeAmount(coffeeId: string, coffeeAmount: number) {
+    const newCoffeeList: CoffeeItem[] = coffeeList?.map((coffee) =>
+      coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
+    );
+    const allCoffeesUpdated: CoffeeItem[] = allCoffees?.map((coffee) =>
+      coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
+    );
+
+    setCoffeeList(newCoffeeList);
+    setAllCoffees(allCoffeesUpdated);
+  }
+
+  function addCoffeeAmountToCart(coffeeId: string) {
+    const coffeeFound: CoffeeItem =
+      coffeeList?.find(({ id }) => coffeeId === id) || ({} as CoffeeItem);
+
+    const coffeeTypeIsAlreadyInTheCart: boolean = order?.selectedCoffees?.some(
+      ({ id }) => id === coffeeId
+    );
+
+    if (coffeeTypeIsAlreadyInTheCart) {
+      const newSelectedCoffees: SelectedCoffee[] = order?.selectedCoffees?.map(
+        (selectedCoffee) => {
+          if (selectedCoffee?.id === coffeeId) {
+            return {
+              ...selectedCoffee,
+              amount: selectedCoffee?.amount + coffeeFound?.amount,
+            };
+          } else {
+            return selectedCoffee;
+          }
+        }
+      );
+
+      setOrder((old) => ({ ...old, selectedCoffees: newSelectedCoffees }));
+    } else {
+      const selectedCoffee: SelectedCoffee = {
+        id: coffeeFound.id,
+        src: coffeeFound.src,
+        type: coffeeFound.type,
+        price: coffeeFound.price,
+        amount: coffeeFound.amount,
+      };
+
+      const selectedCoffees: SelectedCoffee[] = [
+        ...(order?.selectedCoffees || []),
+        selectedCoffee,
+      ];
+
+      setOrder((old) => ({
+        ...old,
+        selectedCoffees: selectedCoffees?.sort(
+          sortBy<SelectedCoffee>("type", "asc")
+        ),
+      }));
     }
   }
 
@@ -185,6 +247,8 @@ export function CoffeeOrderContextProvider({
         updateOrder,
         filterCoffeeList,
         sortCoffeeList,
+        updateCoffeeAmount,
+        addCoffeeAmountToCart,
       }}
     >
       {children}

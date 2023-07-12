@@ -13,10 +13,12 @@ export const IncreaseDecreaseButtonsContainer = styled.div`
   button {
     cursor: pointer;
     border: 0;
+    border-radius: 0.375rem;
     background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0.125rem;
     color: ${(props) => props.theme["purple-400"]};
     transition: all 0.2s ease-in-out;
 

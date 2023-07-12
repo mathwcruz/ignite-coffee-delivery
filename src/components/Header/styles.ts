@@ -31,6 +31,7 @@ export const HeaderContainer = styled.header`
     }
 
     a {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -76,5 +77,22 @@ export const HeaderContainer = styled.header`
         padding: 0.375rem;
       }
     }
+  }
+`;
+
+export const TotalCoffeesInTheCartBadge = styled.div`
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50% !important;
+  padding: 0.25rem;
+  background-color: ${props => props.theme["yellow-700"]} !important;
+
+  strong {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: ${props => props.theme.white};
   }
 `;
