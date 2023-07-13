@@ -7,7 +7,7 @@ import { IncreaseDecreaseButtonsContainer } from "./styles";
 
 interface IncreaseDecreaseAmountButtonsProps {
   coffee: CoffeeItem | SelectedCoffee;
-  onCoffeeAmountChange?: (coffeeId: string, coffeeAmount: number) => void;
+  onCoffeeAmountChange: (coffeeId: string, coffeeAmount: number) => void;
 }
 
 export function IncreaseDecreaseAmountButtons({

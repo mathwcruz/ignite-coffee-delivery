@@ -1,4 +1,4 @@
-/* eslint-disable no-constant-condition */
+import { useCoffeeOrder } from "../../hooks/useCoffeeOrder";
 import { ShippingAddressForm } from "./components/ShippingAddressForm";
 import { PaymentMethod } from "./components/PaymentMethod";
 import { FinishOrder } from "./components/FinishOrder";
@@ -11,9 +11,11 @@ import {
 } from "./styles";
 
 export function Checkout() {
+  const { order } = useCoffeeOrder();
+
   return (
     <CheckoutContainer>
-      {2 < 1 ? (
+      {order?.hasMadeAnOrder ? (
         <OrderConfirmed />
       ) : (
         <>

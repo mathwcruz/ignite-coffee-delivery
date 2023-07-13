@@ -17,7 +17,7 @@ export function CoffeeList() {
     currentOrderByFilter,
     filterCoffeeList,
     sortCoffeeList,
-    updateCoffeeAmount,
+    updateCoffeesListAmount,
     addCoffeeAmountToCart,
   } = useCoffeeOrder();
 
@@ -105,8 +105,8 @@ export function CoffeeList() {
               </span>
               <section>
                 <IncreaseDecreaseAmountButtons
-                  onCoffeeAmountChange={updateCoffeeAmount}
                   coffee={coffee}
+                  onCoffeeAmountChange={updateCoffeesListAmount}
                 />
                 <AddToCartButton
                   type="button"

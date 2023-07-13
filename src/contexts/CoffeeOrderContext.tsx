@@ -20,8 +20,9 @@ interface CoffeeOrderData {
     coffeeTag: string | null,
     currentCoffeeList: CoffeeItem[]
   ) => void;
-  updateCoffeeAmount: (coffeeId: string, coffeeAmount: number) => void;
+  updateCoffeesListAmount: (coffeeId: string, coffeeAmount: number) => void;
   addCoffeeAmountToCart: (coffeeId: string) => void;
+  updateSelectedCoffeesAmount: (coffeeId: string, coffeeAmount: number) => void;
   removeCoffeeFromCart: (coffeeId: string) => void;
 }
 
@@ -42,6 +43,7 @@ export function CoffeeOrderContextProvider({
     useState<CoffeeListOrderByValues>(CoffeeListOrderByValues.MOST_POPULAR);
   const [order, setOrder] = useState<Order>({
     amount: { deliveryFeeAmount: 4 },
+    hasMadeAnOrder: false,
   } as Order);
   const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(false);
 
@@ -118,10 +120,11 @@ export function CoffeeOrderContextProvider({
     }
   }
 
-  function updateCoffeeAmount(coffeeId: string, coffeeAmount: number) {
+  function updateCoffeesListAmount(coffeeId: string, coffeeAmount: number) {
     const newCoffeeList: CoffeeItem[] = coffeeList?.map((coffee) =>
       coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
     );
+
     const allCoffeesUpdated: CoffeeItem[] = allCoffees?.map((coffee) =>
       coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
     );
@@ -176,6 +179,23 @@ export function CoffeeOrderContextProvider({
     }
   }
 
+  function updateSelectedCoffeesAmount(coffeeId: string, coffeeAmount: number) {
+    const newSelectedCoffees: SelectedCoffee[] = order?.selectedCoffees?.map(
+      (selectedCoffee) => {
+        if (selectedCoffee?.id === coffeeId) {
+          return {
+            ...selectedCoffee,
+            amount: coffeeAmount,
+          };
+        } else {
+          return selectedCoffee;
+        }
+      }
+    );
+
+    setOrder((old) => ({ ...old, selectedCoffees: newSelectedCoffees }));
+  }
+
   function removeCoffeeFromCart(coffeeId: string) {
     const selectedCoffeesAfterRemoval: SelectedCoffee[] =
       order?.selectedCoffees?.filter(
@@ -201,7 +221,7 @@ export function CoffeeOrderContextProvider({
 
   useEffect(() => {
     const totalCoffeesAmount: number = order?.selectedCoffees?.reduce(
-      (acc, current) => acc + (current?.amount * current?.price),
+      (acc, current) => acc + current?.amount * current?.price,
       0
     );
 
@@ -244,8 +264,9 @@ export function CoffeeOrderContextProvider({
         updateOrder,
         filterCoffeeList,
         sortCoffeeList,
-        updateCoffeeAmount,
+        updateCoffeesListAmount,
         addCoffeeAmountToCart,
+        updateSelectedCoffeesAmount,
         removeCoffeeFromCart,
       }}
     >

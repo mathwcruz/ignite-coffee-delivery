@@ -28,4 +28,5 @@ export interface Order {
   selectedCoffees: SelectedCoffee[];
   coffeesAmount: number;
   amount: OrderAmount;
+  hasMadeAnOrder: boolean;
 }

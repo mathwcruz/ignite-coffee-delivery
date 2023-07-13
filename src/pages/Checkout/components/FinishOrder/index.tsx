@@ -14,7 +14,12 @@ import {
 } from "./styles";
 
 export function FinishOrder() {
-  const { order, canSubmitAnOrder, removeCoffeeFromCart } = useCoffeeOrder();
+  const {
+    order,
+    canSubmitAnOrder,
+    updateSelectedCoffeesAmount,
+    removeCoffeeFromCart,
+  } = useCoffeeOrder();
 
   return (
     <FinishOrderContainer>
@@ -32,7 +37,10 @@ export function FinishOrder() {
                   <div>
                     <span>{coffee?.type}</span>
                     <section>
-                      <IncreaseDecreaseAmountButtons coffee={coffee} />
+                      <IncreaseDecreaseAmountButtons
+                        coffee={coffee}
+                        onCoffeeAmountChange={updateSelectedCoffeesAmount}
+                      />
                       <RemoveCoffeeFromOrderButton
                         type="button"
                         onClick={() => removeCoffeeFromCart(coffee?.id)}
