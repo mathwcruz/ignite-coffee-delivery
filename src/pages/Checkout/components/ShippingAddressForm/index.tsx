@@ -90,16 +90,16 @@ export function ShippingAddressForm() {
           }
         />
         <Input
-          id="district"
+          id="neighborhood"
           type="text"
-          placeholder="District"
-          value={order?.shippingAddress?.district}
+          placeholder="Neighborhood"
+          value={order?.shippingAddress?.neighborhood}
           onChange={(e) =>
             updateOrder({
               ...order,
               shippingAddress: {
                 ...order?.shippingAddress,
-                district: e.target.value,
+                neighborhood: e.target.value,
               },
             })
           }

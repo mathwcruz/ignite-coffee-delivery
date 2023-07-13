@@ -25,7 +25,7 @@ interface ShippingAddress {
   street: string;
   number: number;
   additionalInfo?: string;
-  district: string;
+  neighborhood: string;
   city: string;
   state: string;
 }
