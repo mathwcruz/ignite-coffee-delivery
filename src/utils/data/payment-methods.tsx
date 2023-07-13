@@ -1,12 +1,7 @@
-import { ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 import { CreditCard, Money, Bank } from "phosphor-react";
 
-interface PaymentMethod {
-  id: string;
-  icon: ReactNode;
-  text: string;
-}
+import { PaymentMethod } from "../../interfaces/payment-method";
 
 export const paymentMethods: PaymentMethod[] = [
   {

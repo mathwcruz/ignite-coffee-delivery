@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { ShoppingCart } from "phosphor-react";
 
+import { CoffeeListOrderByValues, CoffeeItem as CoffeeItemType } from "../../../../interfaces/coffee-list";
 import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
-import {
-  CoffeeItem as CoffeeItemType,
-  CoffeeListOrderByValues,
-} from "../../../../contexts/CoffeeOrderContext";
 import { Select } from "../../../../components/Form/Select";
 import { IncreaseDecreaseAmountButtons } from "../../../../components/IncreaseDecreaseAmountButtons";
 import { simpleSort } from "../../../../utils/global";

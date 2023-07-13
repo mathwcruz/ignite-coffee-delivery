@@ -1,56 +1,10 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 
+import { CoffeeItem, CoffeeListOrderByValues } from "../interfaces/coffee-list";
+import { Order, SelectedCoffee } from "../interfaces/order";
+
 import { coffees } from "../utils/data/coffee-list";
 import { sortBy } from "../utils/global";
-
-export enum CoffeeListOrderByValues {
-  MOST_POPULAR = "most-popular",
-  ALPHABETICAL_ORDER = "alphabetical-order",
-  LOWEST_PRICE = "lowest-price",
-  HIGHEST_PRICE = "highest-price",
-}
-
-export interface CoffeeItem {
-  id: string;
-  src: string;
-  type: string;
-  description: string;
-  price: number;
-  tags: string[];
-  amount: number;
-}
-
-interface ShippingAddress {
-  zipCode: string;
-  street: string;
-  number: number;
-  additionalInfo?: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-}
-
-export interface SelectedCoffee {
-  id: string;
-  src: string;
-  type: string;
-  price: number;
-  amount: number;
-}
-
-interface OrderAmount {
-  totalCoffeesAmount: number;
-  deliveryFeeAmount: number;
-  totalAmount: number;
-}
-
-interface Order {
-  shippingAddress: ShippingAddress;
-  paymentMethod: string;
-  selectedCoffees: SelectedCoffee[];
-  coffeesAmount: number;
-  amount: OrderAmount;
-}
 
 interface CoffeeOrderData {
   allCoffees: CoffeeItem[];

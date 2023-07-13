@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-import { BENEFIT_ITEM_COLORS } from "../../utils/data/coffee-delivery-benefits";
+import { BENEFIT_ITEM_COLORS } from "../../interfaces/coffee-benefits";
 
 export const HomeContainer = styled.div`
   margin-top: 5.875rem;

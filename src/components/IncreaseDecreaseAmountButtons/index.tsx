@@ -1,6 +1,7 @@
 import { Minus, Plus } from "phosphor-react";
 
-import { CoffeeItem, SelectedCoffee } from "../../contexts/CoffeeOrderContext";
+import { CoffeeItem } from "../../interfaces/coffee-list";
+import { SelectedCoffee } from "../../interfaces/order";
 
 import { IncreaseDecreaseButtonsContainer } from "./styles";
 
