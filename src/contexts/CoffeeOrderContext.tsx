@@ -40,6 +40,7 @@ export interface SelectedCoffee {
 
 interface OrderAmount {
   totalCoffeesAmount: number;
+  deliveryFeeAmount: number;
   totalAmount: number;
 }
 
@@ -47,7 +48,7 @@ interface Order {
   shippingAddress: ShippingAddress;
   paymentMethod: string;
   selectedCoffees: SelectedCoffee[];
-  totalCoffeeAmount: number;
+  coffeesAmount: number;
   amount: OrderAmount;
 }
 
@@ -67,6 +68,7 @@ interface CoffeeOrderData {
   ) => void;
   updateCoffeeAmount: (coffeeId: string, coffeeAmount: number) => void;
   addCoffeeAmountToCart: (coffeeId: string) => void;
+  removeCoffeeFromCart: (coffeeId: string) => void;
 }
 
 export const CoffeeOrderContext = createContext({} as CoffeeOrderData);
@@ -84,7 +86,9 @@ export function CoffeeOrderContextProvider({
     useState<string>("all");
   const [currentOrderByFilter, setCurrentOrderByFilter] =
     useState<CoffeeListOrderByValues>(CoffeeListOrderByValues.MOST_POPULAR);
-  const [order, setOrder] = useState<Order>({} as Order);
+  const [order, setOrder] = useState<Order>({
+    amount: { deliveryFeeAmount: 4 },
+  } as Order);
   const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(false);
 
   function updateOrder(order: Order) {
@@ -218,6 +222,45 @@ export function CoffeeOrderContextProvider({
     }
   }
 
+  function removeCoffeeFromCart(coffeeId: string) {
+    const selectedCoffeesAfterRemoval: SelectedCoffee[] =
+      order?.selectedCoffees?.filter(
+        (selectedCoffee) => selectedCoffee?.id !== coffeeId
+      );
+
+    setOrder((old) => ({
+      ...old,
+      selectedCoffees: selectedCoffeesAfterRemoval,
+    }));
+  }
+
+  useEffect(() => {
+    if (order?.selectedCoffees?.length > 0) {
+      const coffeesAmount: number = order?.selectedCoffees?.reduce(
+        (acc, current) => acc + current?.amount,
+        0
+      );
+
+      setOrder((old) => ({ ...old, coffeesAmount }));
+    }
+  }, [order?.selectedCoffees]);
+
+  useEffect(() => {
+    const totalCoffeesAmount: number = order?.selectedCoffees?.reduce(
+      (acc, current) => acc + (current?.amount * current?.price),
+      0
+    );
+
+    const totalAmount: number =
+      totalCoffeesAmount + order?.amount?.deliveryFeeAmount;
+
+    setOrder((old) => ({
+      ...old,
+      amount: { ...old?.amount, totalCoffeesAmount, totalAmount },
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order?.selectedCoffees]);
+
   useEffect(() => {
     const allRequiredShippingAddressInputsAreFilled: boolean =
       Object.values(order?.shippingAddress || {})?.length >= 6;
@@ -249,6 +292,7 @@ export function CoffeeOrderContextProvider({
         sortCoffeeList,
         updateCoffeeAmount,
         addCoffeeAmountToCart,
+        removeCoffeeFromCart,
       }}
     >
       {children}

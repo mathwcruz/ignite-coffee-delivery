@@ -14,7 +14,7 @@ import {
 } from "./styles";
 
 export function FinishOrder() {
-  const { order, canSubmitAnOrder } = useCoffeeOrder();
+  const { order, canSubmitAnOrder, removeCoffeeFromCart } = useCoffeeOrder();
 
   return (
     <FinishOrderContainer>
@@ -33,7 +33,10 @@ export function FinishOrder() {
                     <span>{coffee?.type}</span>
                     <section>
                       <IncreaseDecreaseAmountButtons coffee={coffee} />
-                      <RemoveCoffeeFromOrderButton type="button">
+                      <RemoveCoffeeFromOrderButton
+                        type="button"
+                        onClick={() => removeCoffeeFromCart(coffee?.id)}
+                      >
                         <Trash size={16} />
                         Remove
                       </RemoveCoffeeFromOrderButton>
@@ -52,7 +55,7 @@ export function FinishOrder() {
             </section>
             <section>
               <span>Delivery</span>
-              <span>$4</span>
+              <span>${order?.amount?.deliveryFeeAmount}</span>
             </section>
             <section>
               <strong>Total</strong>

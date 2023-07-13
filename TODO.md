@@ -6,6 +6,7 @@ Features
 [x] Filtro de busca na listagem de cafés
 [x] Filtro de ordenação na listagem de cafés
 [x] Adicionar uma quantidade específicas de cafés no carrinho
+[x] Total de cafés adicionados no carrinho
 [] Aumentar ou diminuir a quantidade de cafés no carrinho
 [] Exibir o total de itens no carrinho no Header
 [] Exibir o valor total da soma de itens no carrinho multiplicados pelo valor

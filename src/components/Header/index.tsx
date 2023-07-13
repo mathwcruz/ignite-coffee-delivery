@@ -26,8 +26,8 @@ export function Header() {
         <NavLink to="/checkout" title="See cart">
           <ShoppingCart weight="fill" size={22} />
           {order?.selectedCoffees?.length > 0 && (
-            <TotalCoffeesInTheCartBadge title={`${order?.totalCoffeeAmount || 3} coffees added`}>
-              <strong>{order?.totalCoffeeAmount || 3}</strong>
+            <TotalCoffeesInTheCartBadge title={`${order?.coffeesAmount} coffees added`}>
+              <strong>{order?.coffeesAmount}</strong>
             </TotalCoffeesInTheCartBadge>
           )}
         </NavLink>
