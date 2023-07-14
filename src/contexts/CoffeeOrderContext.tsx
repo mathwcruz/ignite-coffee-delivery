@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 import { CoffeeItem, CoffeeListOrderByValues } from "../interfaces/coffee-list";
@@ -24,7 +25,39 @@ interface CoffeeOrderData {
   addCoffeeAmountToCart: (coffeeId: string) => void;
   updateSelectedCoffeesAmount: (coffeeId: string, coffeeAmount: number) => void;
   removeCoffeeFromCart: (coffeeId: string) => void;
+  finishOrder: () => void;
+  resetOrderConfirmedStep: () => void;
 }
+
+interface CoffeeOrderContextInitialState {
+  allCoffees: CoffeeItem[];
+  coffeeList: CoffeeItem[];
+  currentCoffeeTagFilter: string;
+  currentOrderByFilter: CoffeeListOrderByValues;
+  order: Order;
+  canSubmitAnOrder: boolean;
+}
+
+const initialState: CoffeeOrderContextInitialState = {
+  allCoffees: [...coffees],
+  coffeeList: coffees,
+  currentCoffeeTagFilter: "all",
+  currentOrderByFilter: CoffeeListOrderByValues.MOST_POPULAR,
+  order: {
+    shippingAddress: {
+      zipCode: "",
+      street: "",
+      number: "",
+      additionalInfo: "",
+      neighborhood: "",
+      city: "",
+      state: "",
+    },
+    amount: { deliveryFeeAmount: 4 },
+    hasMadeAnOrder: false,
+  } as Order,
+  canSubmitAnOrder: false,
+};
 
 export const CoffeeOrderContext = createContext({} as CoffeeOrderData);
 
@@ -35,17 +68,21 @@ interface CoffeeOrderContextProviderProps {
 export function CoffeeOrderContextProvider({
   children,
 }: CoffeeOrderContextProviderProps) {
-  const [allCoffees, setAllCoffees] = useState<CoffeeItem[]>([...coffees]);
-  const [coffeeList, setCoffeeList] = useState<CoffeeItem[]>(coffees);
-  const [currentCoffeeTagFilter, setCurrentCoffeeTagFilter] =
-    useState<string>("all");
+  const [allCoffees, setAllCoffees] = useState<CoffeeItem[]>(
+    initialState.allCoffees
+  );
+  const [coffeeList, setCoffeeList] = useState<CoffeeItem[]>(
+    initialState.coffeeList
+  );
+  const [currentCoffeeTagFilter, setCurrentCoffeeTagFilter] = useState<string>(
+    initialState.currentCoffeeTagFilter
+  );
   const [currentOrderByFilter, setCurrentOrderByFilter] =
-    useState<CoffeeListOrderByValues>(CoffeeListOrderByValues.MOST_POPULAR);
-  const [order, setOrder] = useState<Order>({
-    amount: { deliveryFeeAmount: 4 },
-    hasMadeAnOrder: false,
-  } as Order);
-  const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(false);
+    useState<CoffeeListOrderByValues>(initialState.currentOrderByFilter);
+  const [order, setOrder] = useState<Order>(initialState.order);
+  const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(
+    initialState.canSubmitAnOrder
+  );
 
   function updateOrder(order: Order) {
     setOrder(order);
@@ -208,6 +245,19 @@ export function CoffeeOrderContextProvider({
     }));
   }
 
+  function finishOrder() {
+    setOrder((old) => ({ ...old, hasMadeAnOrder: true, coffeesAmount: 0 }));
+    setAllCoffees((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
+    setCoffeeList((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
+    setCanSubmitAnOrder(initialState.canSubmitAnOrder);
+  }
+
+  function resetOrderConfirmedStep() {
+    if (order?.hasMadeAnOrder) {
+      setOrder({ ...initialState.order, hasMadeAnOrder: false });
+    }
+  }
+
   useEffect(() => {
     if (order?.selectedCoffees?.length > 0) {
       const coffeesAmount: number = order?.selectedCoffees?.reduce(
@@ -232,13 +282,28 @@ export function CoffeeOrderContextProvider({
       ...old,
       amount: { ...old?.amount, totalCoffeesAmount, totalAmount },
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order?.selectedCoffees]);
+
+  function validateAllRequiredShippingAddressFields(): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { additionalInfo, ...allRequiredFields } =
+      order?.shippingAddress || {};
+
+    if (
+      Object.values({ ...allRequiredFields })?.every((value) => !!value) &&
+      allRequiredFields?.zipCode?.length === 9
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 
   useEffect(() => {
     const allRequiredShippingAddressInputsAreFilled: boolean =
-      Object.values(order?.shippingAddress || {})?.length >= 6;
-    const paymentMethodWasSelected: boolean = order?.paymentMethod?.length > 0;
+      validateAllRequiredShippingAddressFields();
+    const paymentMethodWasSelected: boolean =
+      order?.paymentMethodId?.length > 0;
     const atLeastOneCoffeeWasSelected: boolean =
       order?.selectedCoffees?.length > 0;
 
@@ -268,6 +333,8 @@ export function CoffeeOrderContextProvider({
         addCoffeeAmountToCart,
         updateSelectedCoffeesAmount,
         removeCoffeeFromCart,
+        finishOrder,
+        resetOrderConfirmedStep,
       }}
     >
       {children}

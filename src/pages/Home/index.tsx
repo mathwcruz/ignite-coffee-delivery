@@ -1,10 +1,22 @@
+import { useEffect } from "react";
+
 import { CoffeeList } from "./components/CoffeeList";
 
-import { BenefitItem as BenefitItemType, benefits } from "../../utils/data/coffee-delivery-benefits";
+import { useCoffeeOrder } from "../../hooks/useCoffeeOrder";
+import { BenefitItem as BenefitItemType } from "../../interfaces/coffee-benefits";
+import { benefits } from "../../utils/data/coffee-delivery-benefits";
+
 import coffeeBanner from "../../assets/images/cup-of-coffee-and-coffee-beans.svg";
 import { HomeContainer, Benefits, BenefitItem } from "./styles";
 
 export function Home() {
+  const { resetOrderConfirmedStep } = useCoffeeOrder();
+
+  useEffect(() => {
+    resetOrderConfirmedStep();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <HomeContainer>
       <div>

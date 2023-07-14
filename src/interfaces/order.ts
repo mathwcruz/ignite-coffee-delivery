@@ -1,7 +1,7 @@
 interface ShippingAddress {
   zipCode: string;
   street: string;
-  number: number;
+  number: number | string;
   additionalInfo?: string;
   neighborhood: string;
   city: string;
@@ -24,7 +24,7 @@ interface OrderAmount {
 
 export interface Order {
   shippingAddress: ShippingAddress;
-  paymentMethod: string;
+  paymentMethodId: string;
   selectedCoffees: SelectedCoffee[];
   coffeesAmount: number;
   amount: OrderAmount;

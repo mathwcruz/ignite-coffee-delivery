@@ -19,6 +19,7 @@ export function FinishOrder() {
     canSubmitAnOrder,
     updateSelectedCoffeesAmount,
     removeCoffeeFromCart,
+    finishOrder
   } = useCoffeeOrder();
 
   return (
@@ -74,7 +75,7 @@ export function FinishOrder() {
           <FinishOrderButton
             type="button"
             disabled={!canSubmitAnOrder}
-            // onClick={finishOrder}
+            onClick={finishOrder}
           >
             Finish order
           </FinishOrderButton>

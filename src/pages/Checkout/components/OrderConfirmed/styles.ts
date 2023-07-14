@@ -79,6 +79,7 @@ export const InstructionItem = styled.div`
 
     strong {
       font-weight: 700;
+      text-transform: capitalize;
     }
   }
 `;

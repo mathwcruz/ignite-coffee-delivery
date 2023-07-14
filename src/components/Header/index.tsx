@@ -25,7 +25,7 @@ export function Header() {
         </div>
         <NavLink to="/checkout" title="See cart">
           <ShoppingCart weight="fill" size={22} />
-          {order?.selectedCoffees?.length > 0 && (
+          {order?.coffeesAmount > 0 && (
             <TotalCoffeesInTheCartBadge title={`${order?.coffeesAmount} coffees added`}>
               <strong>{order?.coffeesAmount}</strong>
             </TotalCoffeesInTheCartBadge>

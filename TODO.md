@@ -6,7 +6,7 @@ Features
 [x] Filtro de busca na listagem de cafés
 [x] Filtro de ordenação na listagem de cafés
 [x] Adicionar uma quantidade específicas de cafés no carrinho
-[] Aumentar ou diminuir a quantidade de cafés no carrinho
+[x] Aumentar ou diminuir a quantidade de cafés no carrinho
 [x] Exibir o total de itens no carrinho no Header
 [x] Exibir o valor total da soma de itens no carrinho multiplicados pelo valor
 [] Pedir permissão para capturar localização do usuário. Se ele aceitar, mostrar cidade e estado no canto superior direito

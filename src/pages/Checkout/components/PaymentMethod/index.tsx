@@ -22,10 +22,10 @@ export function PaymentMethod() {
           <PaymentMethodItem
             key={paymentMethod?.id}
             className={
-              order?.paymentMethod === paymentMethod?.id ? "selected" : ""
+              order?.paymentMethodId === paymentMethod?.id ? "selected" : ""
             }
             onClick={() =>
-              updateOrder({ ...order, paymentMethod: paymentMethod?.id })
+              updateOrder({ ...order, paymentMethodId: paymentMethod?.id })
             }
           >
             {paymentMethod?.icon}

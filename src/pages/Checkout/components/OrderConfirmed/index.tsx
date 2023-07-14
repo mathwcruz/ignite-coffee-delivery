@@ -1,5 +1,8 @@
 import { CurrencyDollar, MapPin, Timer } from "phosphor-react";
 
+import { useCoffeeOrder } from "../../../../hooks/useCoffeeOrder";
+import { paymentMethods } from "../../../../utils/data/payment-methods";
+
 import manRidingMotorcycle from "../../../../assets/images/man-riding-a-motorcycle.svg";
 import {
   OrderConfirmedContainer,
@@ -8,6 +11,8 @@ import {
 } from "./styles";
 
 export function OrderConfirmed() {
+  const { order: { shippingAddress, paymentMethodId } } = useCoffeeOrder();
+
   return (
     <OrderConfirmedContainer>
       <section>
@@ -25,9 +30,9 @@ export function OrderConfirmed() {
             <section>
               <span>
                 Will be delivered at{" "}
-                <strong>Rua João Daniel Martinelli, 102</strong>
+                <strong>{shippingAddress?.street}, {shippingAddress?.number}</strong>
               </span>
-              <span>Farrapos - Porto Alegre, RS</span>
+              <span>{shippingAddress?.neighborhood} - {shippingAddress?.city}, {shippingAddress?.state}</span>
             </section>
           </InstructionItem>
           <InstructionItem>
@@ -45,7 +50,7 @@ export function OrderConfirmed() {
             </InstructionItemIcon>
             <section>
               <span>Cash on delivery (COD)</span>
-              <strong>Credit card</strong>
+              <strong>{paymentMethods?.find(({ id }) => paymentMethodId === id)?.text}</strong>
             </section>
           </InstructionItem>
         </section>
