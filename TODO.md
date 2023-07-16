@@ -10,5 +10,6 @@ Features
 [x] Exibir o total de itens no carrinho no Header
 [x] Exibir o valor total da soma de itens no carrinho multiplicados pelo valor
 [x] Pedir permissão para capturar localização do usuário. Se ele aceitar, mostrar cidade e estado no canto superior direito
+[x] Mostrar popup messages após algumas ações realizadas
 [] Encontrar uma api para completar dados de endereço baseados em um CEP
-[] Mostrar popup messages após algumas ações realizadas
+[] Refatorar CoffeeOrderContext para utilizar useReducer

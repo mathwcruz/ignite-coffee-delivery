@@ -14,7 +14,6 @@ export function Home() {
 
   useEffect(() => {
     resetOrderConfirmedStep();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

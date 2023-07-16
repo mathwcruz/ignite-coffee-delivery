@@ -43,7 +43,6 @@ export function Header() {
 
   useEffect(() => {
     getUserCurrentPosition();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

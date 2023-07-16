@@ -6,6 +6,7 @@ import { Order, SelectedCoffee } from "../interfaces/order";
 
 import { coffees } from "../utils/data/coffee-list";
 import { sortBy } from "../utils/global";
+import { showToast, TOAST_TYPES } from "../utils/toast";
 
 interface CoffeeOrderData {
   allCoffees: CoffeeItem[];
@@ -214,6 +215,11 @@ export function CoffeeOrderContextProvider({
         ),
       }));
     }
+
+    showToast(
+      TOAST_TYPES.SUCCESS,
+      `You have added ${coffeeFound?.amount} ${coffeeFound?.type} to cart`
+    );
   }
 
   function updateSelectedCoffeesAmount(coffeeId: string, coffeeAmount: number) {
@@ -234,6 +240,10 @@ export function CoffeeOrderContextProvider({
   }
 
   function removeCoffeeFromCart(coffeeId: string) {
+    const coffeeToBeRemovedFromCart: SelectedCoffee =
+      order?.selectedCoffees?.find(({ id }) => coffeeId === id) ||
+      ({} as SelectedCoffee);
+
     const selectedCoffeesAfterRemoval: SelectedCoffee[] =
       order?.selectedCoffees?.filter(
         (selectedCoffee) => selectedCoffee?.id !== coffeeId
@@ -243,6 +253,11 @@ export function CoffeeOrderContextProvider({
       ...old,
       selectedCoffees: selectedCoffeesAfterRemoval,
     }));
+
+    showToast(
+      TOAST_TYPES.SUCCESS,
+      `You have removed ${coffeeToBeRemovedFromCart?.type} from cart`
+    );
   }
 
   function finishOrder() {
@@ -250,6 +265,12 @@ export function CoffeeOrderContextProvider({
     setAllCoffees((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
     setCoffeeList((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
     setCanSubmitAnOrder(initialState.canSubmitAnOrder);
+
+    showToast(
+      TOAST_TYPES.SUCCESS,
+      "We received your order, now you just need to wait",
+      { duration: 2500 }
+    );
   }
 
   function resetOrderConfirmedStep() {
@@ -259,21 +280,21 @@ export function CoffeeOrderContextProvider({
   }
 
   useEffect(() => {
-    if (order?.selectedCoffees?.length > 0) {
-      const coffeesAmount: number = order?.selectedCoffees?.reduce(
-        (acc, current) => acc + current?.amount,
-        0
-      );
+    const coffeesAmount: number = order?.selectedCoffees?.reduce(
+      (acc, current) => acc + current?.amount,
+      0
+    );
 
-      setOrder((old) => ({ ...old, coffeesAmount }));
-    }
+    setOrder((old) => ({ ...old, coffeesAmount }));
   }, [order?.selectedCoffees]);
 
   useEffect(() => {
-    const totalCoffeesAmount: number = order?.selectedCoffees?.reduce(
+    let totalCoffeesAmount: number = order?.selectedCoffees?.reduce(
       (acc, current) => acc + current?.amount * current?.price,
       0
     );
+
+    totalCoffeesAmount = Number(totalCoffeesAmount?.toFixed(1));
 
     const totalAmount: number =
       totalCoffeesAmount + order?.amount?.deliveryFeeAmount;
@@ -312,10 +333,8 @@ export function CoffeeOrderContextProvider({
       paymentMethodWasSelected &&
       atLeastOneCoffeeWasSelected;
 
-    console.log("order", order);
-
     setCanSubmitAnOrder(canSubmitAnOrder);
-  }, [order]);
+  }, [order?.selectedCoffees, order?.paymentMethodId, order?.shippingAddress]);
 
   return (
     <CoffeeOrderContext.Provider

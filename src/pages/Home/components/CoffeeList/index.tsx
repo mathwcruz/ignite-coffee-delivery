@@ -31,7 +31,7 @@ export function CoffeeList() {
     );
 
     setCoffeeTags((old) => simpleSort(old, "asc"));
-  }, [allCoffees]);
+  }, []);
 
   return (
     <CoffeeListContainer>

@@ -1,5 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { Toaster } from 'react-hot-toast';
 
 import { CoffeeOrderContextProvider } from "./contexts/CoffeeOrderContext";
 import { Router } from "./Router";
@@ -13,6 +14,7 @@ export function App() {
       <BrowserRouter>
         <CoffeeOrderContextProvider>
           <Router />
+          <Toaster />
         </CoffeeOrderContextProvider>
       </BrowserRouter>
       <GlobalStyle />
