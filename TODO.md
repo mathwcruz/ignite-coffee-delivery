@@ -1,15 +1,16 @@
 Features
 
-[x] Listagem de cafés disponíveis para compra
-[x] Formulário para o usuário preencher o seu endereço
-[x] Modo responsivo
-[x] Filtro de busca na listagem de cafés
-[x] Filtro de ordenação na listagem de cafés
-[x] Adicionar uma quantidade específicas de cafés no carrinho
-[x] Aumentar ou diminuir a quantidade de cafés no carrinho
-[x] Exibir o total de itens no carrinho no Header
-[x] Exibir o valor total da soma de itens no carrinho multiplicados pelo valor
-[x] Pedir permissão para capturar localização do usuário. Se ele aceitar, mostrar cidade e estado no canto superior direito
-[x] Mostrar popup messages após algumas ações realizadas
-[x] Encontrar uma api para completar dados de endereço baseados em um CEP
-[] Refatorar CoffeeOrderContext para utilizar useReducer
+[x] Request for user current location
+[x] List all coffees available for purchase
+[x] Filter coffee list by coffee tag
+[x] Order coffee list by "most popular"; "alphabetical-order"; "lowest-price" or "highest-price"
+[x] Add specific amount of coffee to the cart
+[x] Shipping address form
+[x] Choose your favorite payment method
+[x] Fill user address based on Zip Code
+[x] Increase or decrease coffee amount in the cart
+[x] Remove specific coffee from cart
+[x] Total coffee amount in the cart
+[x] Display total itens in the cart
+[x] Toast action messages
+[x] Responsive layout
