@@ -1,8 +1,9 @@
 import toast, { ToastOptions } from "react-hot-toast";
 
 export enum TOAST_TYPES {
+  "LOADING" = "loading",
   "ERROR" = "error",
-  "SUCCESS" = "success",
+  "SUCCESS" = "success"
 }
 
 export function showToast(
@@ -17,6 +18,10 @@ export function showToast(
   };
 
   switch (type) {
+    case TOAST_TYPES.LOADING: {
+      return toast.loading(message, toastOptions);
+    }
+
     case TOAST_TYPES.SUCCESS: {
       return toast.success(message, toastOptions);
     }

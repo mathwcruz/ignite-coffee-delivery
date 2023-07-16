@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, ReactNode, useEffect, useState } from "react";
+import cep from "cep-promise";
 
 import { CoffeeItem, CoffeeListOrderByValues } from "../interfaces/coffee-list";
 import { Order, SelectedCoffee } from "../interfaces/order";
@@ -15,6 +16,7 @@ interface CoffeeOrderData {
   currentOrderByFilter: CoffeeListOrderByValues;
   order: Order;
   canSubmitAnOrder: boolean;
+  isFetching: boolean;
   updateOrder: (order: Order) => void;
   filterCoffeeList: (coffeeTag: string) => void;
   sortCoffeeList: (
@@ -24,6 +26,7 @@ interface CoffeeOrderData {
   ) => void;
   updateCoffeesListAmount: (coffeeId: string, coffeeAmount: number) => void;
   addCoffeeAmountToCart: (coffeeId: string) => void;
+  getUserAddressBasedOnZipCode: (zipCode: string) => Promise<void>;
   updateSelectedCoffeesAmount: (coffeeId: string, coffeeAmount: number) => void;
   removeCoffeeFromCart: (coffeeId: string) => void;
   finishOrder: () => void;
@@ -37,6 +40,7 @@ interface CoffeeOrderContextInitialState {
   currentOrderByFilter: CoffeeListOrderByValues;
   order: Order;
   canSubmitAnOrder: boolean;
+  isFetching: boolean;
 }
 
 const initialState: CoffeeOrderContextInitialState = {
@@ -58,6 +62,7 @@ const initialState: CoffeeOrderContextInitialState = {
     hasMadeAnOrder: false,
   } as Order,
   canSubmitAnOrder: false,
+  isFetching: false,
 };
 
 export const CoffeeOrderContext = createContext({} as CoffeeOrderData);
@@ -83,6 +88,9 @@ export function CoffeeOrderContextProvider({
   const [order, setOrder] = useState<Order>(initialState.order);
   const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(
     initialState.canSubmitAnOrder
+  );
+  const [isFetching, setIsFetching] = useState<boolean>(
+    initialState.isFetching
   );
 
   function updateOrder(order: Order) {
@@ -222,6 +230,38 @@ export function CoffeeOrderContextProvider({
     );
   }
 
+  async function getUserAddressBasedOnZipCode(zipCode: string): Promise<void> {
+    setIsFetching(true);
+
+    showToast(TOAST_TYPES.LOADING, "Searching for Zip Code", {
+      id: "@coffee-delivery:zip-code-toast", duration: 300
+    });
+
+    try {
+      const { street, neighborhood, city, state } = await cep(zipCode);
+
+      setOrder((old) => {
+        return {
+          ...old,
+          shippingAddress: {
+            ...old?.shippingAddress,
+            street,
+            neighborhood,
+            city,
+            state,
+          },
+        };
+      });
+    } catch (error) {
+      showToast(TOAST_TYPES.ERROR, "Zip Code not found", {
+        id: "@coffee-delivery:zip-code-toast",
+        duration: 1500,
+      });
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
   function updateSelectedCoffeesAmount(coffeeId: string, coffeeAmount: number) {
     const newSelectedCoffees: SelectedCoffee[] = order?.selectedCoffees?.map(
       (selectedCoffee) => {
@@ -279,6 +319,21 @@ export function CoffeeOrderContextProvider({
     }
   }
 
+  function validateAllRequiredShippingAddressFields(): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { additionalInfo, ...allRequiredFields } =
+      order?.shippingAddress || {};
+
+    if (
+      Object.values({ ...allRequiredFields })?.every((value) => !!value) &&
+      allRequiredFields?.zipCode?.length === 9
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   useEffect(() => {
     const coffeesAmount: number = order?.selectedCoffees?.reduce(
       (acc, current) => acc + current?.amount,
@@ -305,21 +360,6 @@ export function CoffeeOrderContextProvider({
     }));
   }, [order?.selectedCoffees]);
 
-  function validateAllRequiredShippingAddressFields(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { additionalInfo, ...allRequiredFields } =
-      order?.shippingAddress || {};
-
-    if (
-      Object.values({ ...allRequiredFields })?.every((value) => !!value) &&
-      allRequiredFields?.zipCode?.length === 9
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
   useEffect(() => {
     const allRequiredShippingAddressInputsAreFilled: boolean =
       validateAllRequiredShippingAddressFields();
@@ -345,11 +385,13 @@ export function CoffeeOrderContextProvider({
         currentOrderByFilter,
         order,
         canSubmitAnOrder,
+        isFetching,
         updateOrder,
         filterCoffeeList,
         sortCoffeeList,
         updateCoffeesListAmount,
         addCoffeeAmountToCart,
+        getUserAddressBasedOnZipCode,
         updateSelectedCoffeesAmount,
         removeCoffeeFromCart,
         finishOrder,
