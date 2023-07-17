@@ -1,7 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState,
+  useReducer,
+} from "react";
 import cep from "cep-promise";
 
+import {
+  filterCoffeeListAction,
+  resetCoffeeListAction,
+  sortCoffeeListAction,
+  updateCoffeeListAmountAction,
+} from "../reducers/coffee-list-state/actions";
+import { coffeeListStateReducer } from "../reducers/coffee-list-state/reducer";
 import { CoffeeItem, CoffeeListOrderByValues } from "../interfaces/coffee-list";
 import { Order, SelectedCoffee } from "../interfaces/order";
 
@@ -74,17 +87,15 @@ interface CoffeeOrderContextProviderProps {
 export function CoffeeOrderContextProvider({
   children,
 }: CoffeeOrderContextProviderProps) {
-  const [allCoffees, setAllCoffees] = useState<CoffeeItem[]>(
-    initialState.allCoffees
+  const [coffeeListState, coffeeListDispatch] = useReducer(
+    coffeeListStateReducer,
+    {
+      allCoffees: initialState.allCoffees,
+      coffeeList: initialState.coffeeList,
+      currentCoffeeTagFilter: initialState.currentCoffeeTagFilter,
+      currentOrderByFilter: initialState.currentOrderByFilter,
+    }
   );
-  const [coffeeList, setCoffeeList] = useState<CoffeeItem[]>(
-    initialState.coffeeList
-  );
-  const [currentCoffeeTagFilter, setCurrentCoffeeTagFilter] = useState<string>(
-    initialState.currentCoffeeTagFilter
-  );
-  const [currentOrderByFilter, setCurrentOrderByFilter] =
-    useState<CoffeeListOrderByValues>(initialState.currentOrderByFilter);
   const [order, setOrder] = useState<Order>(initialState.order);
   const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(
     initialState.canSubmitAnOrder
@@ -92,6 +103,13 @@ export function CoffeeOrderContextProvider({
   const [isFetching, setIsFetching] = useState<boolean>(
     initialState.isFetching
   );
+
+  const {
+    allCoffees,
+    coffeeList,
+    currentCoffeeTagFilter,
+    currentOrderByFilter,
+  } = coffeeListState;
 
   function updateOrder(order: Order) {
     setOrder(order);
@@ -102,59 +120,18 @@ export function CoffeeOrderContextProvider({
     coffeeTagFilter: string | null,
     currentCoffeeList: CoffeeItem[]
   ) {
-    switch (orderBy) {
-      case CoffeeListOrderByValues.MOST_POPULAR: {
-        const coffeeListOrderedByMostPopular: CoffeeItem[] = coffeeTagFilter
-          ? allCoffees?.filter((coffee) =>
-              coffee?.tags?.includes(coffeeTagFilter)
-            )
-          : allCoffees;
-
-        setCoffeeList(coffeeListOrderedByMostPopular);
-
-        break;
-      }
-
-      case CoffeeListOrderByValues.ALPHABETICAL_ORDER: {
-        const coffeeListOrderedByType: CoffeeItem[] = currentCoffeeList.sort(
-          sortBy<CoffeeItem>("type", "asc")
-        );
-
-        setCoffeeList(coffeeListOrderedByType);
-
-        break;
-      }
-
-      case CoffeeListOrderByValues.LOWEST_PRICE: {
-        const coffeeListOrderedByLowestPrice: CoffeeItem[] =
-          currentCoffeeList.sort(sortBy<CoffeeItem>("price", "asc"));
-
-        setCoffeeList(coffeeListOrderedByLowestPrice);
-
-        break;
-      }
-
-      case CoffeeListOrderByValues.HIGHEST_PRICE: {
-        const coffeeListOrderedByHighestPrice: CoffeeItem[] =
-          currentCoffeeList.sort(sortBy<CoffeeItem>("price", "desc"));
-
-        setCoffeeList(coffeeListOrderedByHighestPrice);
-
-        break;
-      }
-
-      default:
-        break;
-    }
-
-    setCurrentOrderByFilter(orderBy);
+    coffeeListDispatch(
+      sortCoffeeListAction(orderBy, coffeeTagFilter, currentCoffeeList)
+    );
   }
 
   function filterCoffeeList(coffeeTag: string) {
-    setCurrentCoffeeTagFilter(coffeeTag);
+    coffeeListDispatch(filterCoffeeListAction(coffeeTag));
 
     if (coffeeTag === "all") {
-      sortCoffeeList(currentOrderByFilter, null, allCoffees);
+      coffeeListDispatch(
+        sortCoffeeListAction(currentOrderByFilter, null, allCoffees)
+      );
 
       return;
     } else {
@@ -162,21 +139,18 @@ export function CoffeeOrderContextProvider({
         coffee?.tags?.includes(coffeeTag)
       );
 
-      sortCoffeeList(currentOrderByFilter, coffeeTag, coffeeListFiltered);
+      coffeeListDispatch(
+        sortCoffeeListAction(
+          currentOrderByFilter,
+          coffeeTag,
+          coffeeListFiltered
+        )
+      );
     }
   }
 
   function updateCoffeesListAmount(coffeeId: string, coffeeAmount: number) {
-    const newCoffeeList: CoffeeItem[] = coffeeList?.map((coffee) =>
-      coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
-    );
-
-    const allCoffeesUpdated: CoffeeItem[] = allCoffees?.map((coffee) =>
-      coffee?.id === coffeeId ? { ...coffee, amount: coffeeAmount } : coffee
-    );
-
-    setCoffeeList(newCoffeeList);
-    setAllCoffees(allCoffeesUpdated);
+    coffeeListDispatch(updateCoffeeListAmountAction(coffeeId, coffeeAmount));
   }
 
   function addCoffeeAmountToCart(coffeeId: string) {
@@ -201,7 +175,7 @@ export function CoffeeOrderContextProvider({
         }
       );
 
-      setOrder((old) => ({ ...old, selectedCoffees: newSelectedCoffees }));
+      updateOrder({ ...order, selectedCoffees: newSelectedCoffees });
     } else {
       const selectedCoffee: SelectedCoffee = {
         id: coffeeFound.id,
@@ -216,12 +190,12 @@ export function CoffeeOrderContextProvider({
         selectedCoffee,
       ];
 
-      setOrder((old) => ({
-        ...old,
+      updateOrder({
+        ...order,
         selectedCoffees: selectedCoffees?.sort(
           sortBy<SelectedCoffee>("type", "asc")
         ),
-      }));
+      });
     }
 
     showToast(
@@ -234,23 +208,22 @@ export function CoffeeOrderContextProvider({
     setIsFetching(true);
 
     showToast(TOAST_TYPES.LOADING, "Searching for Zip Code", {
-      id: "@coffee-delivery:zip-code-toast", duration: 300
+      id: "@coffee-delivery:zip-code-toast",
+      duration: 300,
     });
 
     try {
       const { street, neighborhood, city, state } = await cep(zipCode);
 
-      setOrder((old) => {
-        return {
-          ...old,
-          shippingAddress: {
-            ...old?.shippingAddress,
-            street,
-            neighborhood,
-            city,
-            state,
-          },
-        };
+      updateOrder({
+        ...order,
+        shippingAddress: {
+          ...order?.shippingAddress,
+          street,
+          neighborhood,
+          city,
+          state,
+        },
       });
     } catch (error) {
       showToast(TOAST_TYPES.ERROR, "Zip Code not found", {
@@ -276,7 +249,7 @@ export function CoffeeOrderContextProvider({
       }
     );
 
-    setOrder((old) => ({ ...old, selectedCoffees: newSelectedCoffees }));
+    updateOrder({ ...order, selectedCoffees: newSelectedCoffees });
   }
 
   function removeCoffeeFromCart(coffeeId: string) {
@@ -289,10 +262,10 @@ export function CoffeeOrderContextProvider({
         (selectedCoffee) => selectedCoffee?.id !== coffeeId
       );
 
-    setOrder((old) => ({
-      ...old,
+    updateOrder({
+      ...order,
       selectedCoffees: selectedCoffeesAfterRemoval,
-    }));
+    });
 
     showToast(
       TOAST_TYPES.SUCCESS,
@@ -301,9 +274,8 @@ export function CoffeeOrderContextProvider({
   }
 
   function finishOrder() {
-    setOrder((old) => ({ ...old, hasMadeAnOrder: true, coffeesAmount: 0 }));
-    setAllCoffees((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
-    setCoffeeList((old) => old?.map((coffee) => ({ ...coffee, amount: 1 })));
+    coffeeListDispatch(resetCoffeeListAction());
+    updateOrder({ ...order, hasMadeAnOrder: true, coffeesAmount: 0 });
     setCanSubmitAnOrder(initialState.canSubmitAnOrder);
 
     showToast(
@@ -315,7 +287,7 @@ export function CoffeeOrderContextProvider({
 
   function resetOrderConfirmedStep() {
     if (order?.hasMadeAnOrder) {
-      setOrder({ ...initialState.order, hasMadeAnOrder: false });
+      updateOrder({ ...initialState.order, hasMadeAnOrder: false });
     }
   }
 
@@ -340,7 +312,7 @@ export function CoffeeOrderContextProvider({
       0
     );
 
-    setOrder((old) => ({ ...old, coffeesAmount }));
+    updateOrder({ ...order, coffeesAmount });
   }, [order?.selectedCoffees]);
 
   useEffect(() => {
@@ -354,10 +326,10 @@ export function CoffeeOrderContextProvider({
     const totalAmount: number =
       totalCoffeesAmount + order?.amount?.deliveryFeeAmount;
 
-    setOrder((old) => ({
-      ...old,
-      amount: { ...old?.amount, totalCoffeesAmount, totalAmount },
-    }));
+    updateOrder({
+      ...order,
+      amount: { ...order?.amount, totalCoffeesAmount, totalAmount },
+    });
   }, [order?.selectedCoffees]);
 
   useEffect(() => {
