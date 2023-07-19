@@ -15,36 +15,19 @@ import {
   updateCoffeeListAmountAction,
 } from "../reducers/coffee-list-state/actions";
 import { coffeeListStateReducer } from "../reducers/coffee-list-state/reducer";
+import { coffeeOrderStateReducer } from "../reducers/cofee-order-state/reducer";
+import {
+  addCoffeeAmountToCartAction,
+  removeCoffeeFromCartAction,
+  updateOrderAction,
+  updateSelectedCoffeesAmountAction,
+  updateTotalCoffeesAmountInCartAction,
+} from "../reducers/cofee-order-state/actions";
 import { CoffeeItem, CoffeeListOrderByValues } from "../interfaces/coffee-list";
 import { Order, SelectedCoffee } from "../interfaces/order";
 
 import { coffees } from "../utils/data/coffee-list";
-import { sortBy } from "../utils/global";
 import { showToast, TOAST_TYPES } from "../utils/toast";
-
-interface CoffeeOrderData {
-  allCoffees: CoffeeItem[];
-  coffeeList: CoffeeItem[];
-  currentCoffeeTagFilter: string;
-  currentOrderByFilter: CoffeeListOrderByValues;
-  order: Order;
-  canSubmitAnOrder: boolean;
-  isFetching: boolean;
-  updateOrder: (order: Order) => void;
-  filterCoffeeList: (coffeeTag: string) => void;
-  sortCoffeeList: (
-    orderBy: CoffeeListOrderByValues,
-    coffeeTag: string | null,
-    currentCoffeeList: CoffeeItem[]
-  ) => void;
-  updateCoffeesListAmount: (coffeeId: string, coffeeAmount: number) => void;
-  addCoffeeAmountToCart: (coffeeId: string) => void;
-  getUserAddressBasedOnZipCode: (zipCode: string) => Promise<void>;
-  updateSelectedCoffeesAmount: (coffeeId: string, coffeeAmount: number) => void;
-  removeCoffeeFromCart: (coffeeId: string) => void;
-  finishOrder: () => void;
-  resetOrderConfirmedStep: () => void;
-}
 
 interface CoffeeOrderContextInitialState {
   allCoffees: CoffeeItem[];
@@ -78,6 +61,30 @@ const initialState: CoffeeOrderContextInitialState = {
   isFetching: false,
 };
 
+interface CoffeeOrderData {
+  allCoffees: CoffeeItem[];
+  coffeeList: CoffeeItem[];
+  currentCoffeeTagFilter: string;
+  currentOrderByFilter: CoffeeListOrderByValues;
+  order: Order;
+  canSubmitAnOrder: boolean;
+  isFetching: boolean;
+  filterCoffeeList: (coffeeTag: string) => void;
+  sortCoffeeList: (
+    orderBy: CoffeeListOrderByValues,
+    coffeeTag: string | null,
+    currentCoffeeList: CoffeeItem[]
+  ) => void;
+  updateCoffeesListAmount: (coffeeId: string, coffeeAmount: number) => void;
+  getUserAddressBasedOnZipCode: (zipCode: string) => Promise<void>;
+  updateOrder: (order: Order) => void;
+  addCoffeeAmountToCart: (coffeeId: string) => void;
+  updateSelectedCoffeesAmount: (coffeeId: string, coffeeAmount: number) => void;
+  removeCoffeeFromCart: (coffeeId: string) => void;
+  finishOrder: () => void;
+  resetOrderConfirmedStep: () => void;
+}
+
 export const CoffeeOrderContext = createContext({} as CoffeeOrderData);
 
 interface CoffeeOrderContextProviderProps {
@@ -96,7 +103,12 @@ export function CoffeeOrderContextProvider({
       currentOrderByFilter: initialState.currentOrderByFilter,
     }
   );
-  const [order, setOrder] = useState<Order>(initialState.order);
+  const [coffeeOrderState, coffeeOrderDispatch] = useReducer(
+    coffeeOrderStateReducer,
+    {
+      order: initialState.order,
+    }
+  );
   const [canSubmitAnOrder, setCanSubmitAnOrder] = useState<boolean>(
     initialState.canSubmitAnOrder
   );
@@ -111,9 +123,7 @@ export function CoffeeOrderContextProvider({
     currentOrderByFilter,
   } = coffeeListState;
 
-  function updateOrder(order: Order) {
-    setOrder(order);
-  }
+  const { order } = coffeeOrderState;
 
   function sortCoffeeList(
     orderBy: CoffeeListOrderByValues,
@@ -153,57 +163,6 @@ export function CoffeeOrderContextProvider({
     coffeeListDispatch(updateCoffeeListAmountAction(coffeeId, coffeeAmount));
   }
 
-  function addCoffeeAmountToCart(coffeeId: string) {
-    const coffeeFound: CoffeeItem =
-      coffeeList?.find(({ id }) => coffeeId === id) || ({} as CoffeeItem);
-
-    const coffeeTypeIsAlreadyInTheCart: boolean = order?.selectedCoffees?.some(
-      ({ id }) => id === coffeeId
-    );
-
-    if (coffeeTypeIsAlreadyInTheCart) {
-      const newSelectedCoffees: SelectedCoffee[] = order?.selectedCoffees?.map(
-        (selectedCoffee) => {
-          if (selectedCoffee?.id === coffeeId) {
-            return {
-              ...selectedCoffee,
-              amount: selectedCoffee?.amount + coffeeFound?.amount,
-            };
-          } else {
-            return selectedCoffee;
-          }
-        }
-      );
-
-      updateOrder({ ...order, selectedCoffees: newSelectedCoffees });
-    } else {
-      const selectedCoffee: SelectedCoffee = {
-        id: coffeeFound.id,
-        src: coffeeFound.src,
-        type: coffeeFound.type,
-        price: coffeeFound.price,
-        amount: coffeeFound.amount,
-      };
-
-      const selectedCoffees: SelectedCoffee[] = [
-        ...(order?.selectedCoffees || []),
-        selectedCoffee,
-      ];
-
-      updateOrder({
-        ...order,
-        selectedCoffees: selectedCoffees?.sort(
-          sortBy<SelectedCoffee>("type", "asc")
-        ),
-      });
-    }
-
-    showToast(
-      TOAST_TYPES.SUCCESS,
-      `You have added ${coffeeFound?.amount} ${coffeeFound?.type} to cart`
-    );
-  }
-
   async function getUserAddressBasedOnZipCode(zipCode: string): Promise<void> {
     setIsFetching(true);
 
@@ -219,6 +178,7 @@ export function CoffeeOrderContextProvider({
         ...order,
         shippingAddress: {
           ...order?.shippingAddress,
+          zipCode,
           street,
           neighborhood,
           city,
@@ -235,37 +195,34 @@ export function CoffeeOrderContextProvider({
     }
   }
 
-  function updateSelectedCoffeesAmount(coffeeId: string, coffeeAmount: number) {
-    const newSelectedCoffees: SelectedCoffee[] = order?.selectedCoffees?.map(
-      (selectedCoffee) => {
-        if (selectedCoffee?.id === coffeeId) {
-          return {
-            ...selectedCoffee,
-            amount: coffeeAmount,
-          };
-        } else {
-          return selectedCoffee;
-        }
-      }
-    );
+  function updateOrder(order: Order) {
+    coffeeOrderDispatch(updateOrderAction(order));
+  }
 
-    updateOrder({ ...order, selectedCoffees: newSelectedCoffees });
+  function addCoffeeAmountToCart(coffeeId: string) {
+    const coffeeFound: CoffeeItem =
+      coffeeList?.find(({ id }) => coffeeId === id) || ({} as CoffeeItem);
+
+    coffeeOrderDispatch(addCoffeeAmountToCartAction(coffeeFound));
+
+    showToast(
+      TOAST_TYPES.SUCCESS,
+      `You have added ${coffeeFound?.amount} ${coffeeFound?.type} to cart`
+    );
+  }
+
+  function updateSelectedCoffeesAmount(coffeeId: string, coffeeAmount: number) {
+    coffeeOrderDispatch(
+      updateSelectedCoffeesAmountAction(coffeeId, coffeeAmount)
+    );
   }
 
   function removeCoffeeFromCart(coffeeId: string) {
+    coffeeOrderDispatch(removeCoffeeFromCartAction(coffeeId));
+
     const coffeeToBeRemovedFromCart: SelectedCoffee =
       order?.selectedCoffees?.find(({ id }) => coffeeId === id) ||
       ({} as SelectedCoffee);
-
-    const selectedCoffeesAfterRemoval: SelectedCoffee[] =
-      order?.selectedCoffees?.filter(
-        (selectedCoffee) => selectedCoffee?.id !== coffeeId
-      );
-
-    updateOrder({
-      ...order,
-      selectedCoffees: selectedCoffeesAfterRemoval,
-    });
 
     showToast(
       TOAST_TYPES.SUCCESS,
@@ -307,13 +264,20 @@ export function CoffeeOrderContextProvider({
   }
 
   useEffect(() => {
-    const coffeesAmount: number = order?.selectedCoffees?.reduce(
-      (acc, current) => acc + current?.amount,
-      0
-    );
+    const allRequiredShippingAddressInputsAreFilled: boolean =
+      validateAllRequiredShippingAddressFields();
+    const paymentMethodWasSelected: boolean =
+      order?.paymentMethodId?.length > 0;
+    const atLeastOneCoffeeWasSelected: boolean =
+      order?.selectedCoffees?.length > 0;
 
-    updateOrder({ ...order, coffeesAmount });
-  }, [order?.selectedCoffees]);
+    const canSubmitAnOrder: boolean =
+      allRequiredShippingAddressInputsAreFilled &&
+      paymentMethodWasSelected &&
+      atLeastOneCoffeeWasSelected;
+
+    setCanSubmitAnOrder(canSubmitAnOrder);
+  }, [order?.selectedCoffees, order?.paymentMethodId, order?.shippingAddress]);
 
   useEffect(() => {
     let totalCoffeesAmount: number = order?.selectedCoffees?.reduce(
@@ -333,20 +297,8 @@ export function CoffeeOrderContextProvider({
   }, [order?.selectedCoffees]);
 
   useEffect(() => {
-    const allRequiredShippingAddressInputsAreFilled: boolean =
-      validateAllRequiredShippingAddressFields();
-    const paymentMethodWasSelected: boolean =
-      order?.paymentMethodId?.length > 0;
-    const atLeastOneCoffeeWasSelected: boolean =
-      order?.selectedCoffees?.length > 0;
-
-    const canSubmitAnOrder: boolean =
-      allRequiredShippingAddressInputsAreFilled &&
-      paymentMethodWasSelected &&
-      atLeastOneCoffeeWasSelected;
-
-    setCanSubmitAnOrder(canSubmitAnOrder);
-  }, [order?.selectedCoffees, order?.paymentMethodId, order?.shippingAddress]);
+    coffeeOrderDispatch(updateTotalCoffeesAmountInCartAction());
+  }, [order?.selectedCoffees]);
 
   return (
     <CoffeeOrderContext.Provider
