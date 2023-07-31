@@ -3,10 +3,10 @@ import { NavLink } from "react-router-dom";
 import { MapPin, ShoppingCart } from "phosphor-react";
 
 import { useCoffeeOrder } from "../../hooks/useCoffeeOrder";
+import { api } from "../../services/api";
 
 import logo from "../../assets/images/logo.svg";
 import { HeaderContainer, TotalCoffeesInTheCartBadge } from "./styles";
-import { api } from "../../services/api";
 
 export function Header() {
   const { order } = useCoffeeOrder();
