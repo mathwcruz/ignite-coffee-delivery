@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 
-import { CoffeeItem } from "../../contexts/CoffeeOrderContext";
+import { CoffeeItem } from "../../interfaces/coffee-list";
 
 import espresso from "../../assets/images/coffees/espresso.svg";
 import american from "../../assets/images/coffees/american.svg";
