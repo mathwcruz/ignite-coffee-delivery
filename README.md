@@ -21,11 +21,11 @@
   <img src="./.github/demos/desktop-demo.gif" width="100%"/>
 </p>
 
-<!-- ### Mobile layout 📱
+### Mobile layout 📱
 
 <p align="center">
-  <img src="./.github/demos/mobile-demon.gif" width="30%"/>
-</p> -->
+  <img src="./.github/demos/mobile-demo.gif" width="30%"/>
+</p>
 
 <h3 align="center"> 
 	Application status: Finalized ✔️
