@@ -15,6 +15,9 @@ export const OrderConfirmedContainer = styled.div`
     gap: 2.5rem;
 
     & > div {
+      display: flex;
+      flex-direction: column;
+
       h5 {
         font-family: "Baloo 2", sans-serif;
         font-size: 2rem;
@@ -57,6 +60,42 @@ export const OrderConfirmedContainer = styled.div`
   img {
     align-self: flex-end;
   }
+
+  @media screen and (max-width: ${(props) => props.theme.medium}) {
+    flex-direction: column;
+    gap: 2rem;
+
+    & > section {
+      align-self: center;
+
+      & > div {
+        flex-wrap: wrap;
+
+        h5 {
+          font-size: 1.5rem;
+        }
+
+        span {
+          font-size: 0.875rem;
+        }
+      }
+
+      & > section {
+        padding: 1.25rem 4.125rem 1.25rem 1.25rem;
+      }
+    }
+
+    img {
+      align-self: center;
+      width: 25rem;
+    }
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.small}) {
+    img {
+      width: 20rem;
+    }
+  }
 `;
 
 export const InstructionItem = styled.div`
@@ -65,7 +104,7 @@ export const InstructionItem = styled.div`
   gap: 0.75rem;
 
   & > section {
-    width: 22.125rem;
+    width: 15rem;
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
@@ -80,6 +119,12 @@ export const InstructionItem = styled.div`
     strong {
       font-weight: 700;
       text-transform: capitalize;
+    }
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.medium}) {
+    & > section {
+      width: 12.5rem;
     }
   }
 `;
